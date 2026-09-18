@@ -1,46 +1,50 @@
-# Astro Starter Kit: Basics
+# Inovus
+
+Website profil kelas PTI-B angkatan 2025, Universitas Negeri Malang.
+Dibangun dengan Astro untuk memperkenalkan anggota dan menyimpan momen kelas.
+
+## Status
+
+Project masih menggunakan halaman starter Astro. Konteks untuk coding agent sudah
+siap; global CSS dan halaman website adalah tahap berikutnya.
+
+Rencana navigasi: **Beranda, Tentang, Anggota, Galeri**, masing-masing pada halaman
+terpisah. Foto anggota dan galeri memakai placeholder terlebih dahulu. Tidak ada
+artikel/blog dalam lingkup awal.
+
+## Menjalankan project
+
+Gunakan Node.js `>=22.12.0` dan Bun. Dependency mengikuti `package.json` dan `bun.lock`.
 
 ```sh
-bun create astro@latest -- --template basics
+bun install
+bun run dev --background
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Port default adalah `4321`. Ikuti URL dari CLI jika port tersebut sudah dipakai.
 
-## 🚀 Project Structure
+| Command | Kegunaan |
+| --- | --- |
+| `bun run astro dev status` | Melihat status background server. |
+| `bun run astro dev logs` | Membaca log server. |
+| `bun run astro dev stop` | Menghentikan background server. |
+| `bun run build` | Membuat production build di `dist/`. |
+| `bun run preview` | Meninjau hasil build secara lokal. |
 
-Inside of your Astro project, you'll see the following folders and files:
+Belum ada script lint, test, atau type-check terpisah.
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+## Panduan pengembangan dengan AI
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+- [AGENTS.md](AGENTS.md): aturan kerja agent, struktur repo, command, verifikasi.
+- [CLAUDE.md](CLAUDE.md): mengarahkan Claude ke aturan bersama.
+- [Project brief](docs/project-brief.md): identitas, navigasi, palet, placeholder, tahap pengerjaan.
 
-## 🧞 Commands
+Perbarui brief ketika keputusan produk berubah agar sesi berikutnya memiliki
+konteks yang sama. Setup berupa dokumentasi untuk coding agent dan tidak
+membutuhkan API key atau dependency AI.
 
-All commands are run from the root of the project, from a terminal:
+## Referensi
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- [Dokumentasi Astro](https://docs.astro.build)
+- [Panduan AGENTS.md dari OpenAI](https://developers.openai.com/es-419/docs/agent-configuration/agents-md)
+- [Referensi komunitas WRI](https://wridev.id/en/)
