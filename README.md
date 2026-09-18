@@ -1,16 +1,49 @@
+<p align="center">
+  <img src="docs/assets/hi-lol.png" alt="Meme Will it work? dengan komentar hi lol." width="225" />
+</p>
+
 # Inovus
 
 Website profil kelas PTI-B angkatan 2025, Universitas Negeri Malang.
-Dibangun dengan Astro untuk memperkenalkan anggota dan menyimpan momen kelas.
+Dibangun dengan Astro sebagai tempat kenalan sama anak-anak kelas, melihat
+kebersamaan, dan menyimpan cerita lewat foto. Satu tempat buat perjalanan kuliah
+kita, dari awal masuk sampai jadi kenangan.
+
+## Tentang website
+
+Inovus dirancang sebagai website dengan beberapa halaman:
+
+| Halaman | Isi yang direncanakan |
+| --- | --- |
+| **Beranda** | Perkenalan singkat Inovus dan cuplikan kehidupan kelas. |
+| **Tentang** | Identitas PTI-B, cerita kelas, dan struktur pengurus. |
+| **Anggota** | Kartu anggota, nama panggilan, dan sosial media opsional. |
+| **Galeri** | Album foto kegiatan dan momen kebersamaan. |
+
+Fokusnya profil kelas dan album kenangan digital, tanpa artikel atau blog.
+Foto anggota dan galeri menggunakan placeholder sampai aset asli tersedia.
+
+## Identitas visual
+
+Tema terang dengan putih sebagai dasar, biru sebagai warna utama, dan oren
+sebagai aksen. Palet yang disepakati untuk implementasi:
+
+| Warna | Hex | Peran |
+| --- | --- | --- |
+| Warm white | `#FAFAF8` | Background utama. |
+| White | `#FFFFFF` | Navbar, kartu, dan panel. |
+| Persian Blue | `#0C35C6` | Tombol utama dan identitas brand. |
+| Blazing Flame | `#FC480E` | Aksen dan detail dekoratif. |
+| Alabaster Grey | `#E0E0E0` | Pembatas dan placeholder. |
+| Onyx | `#151515` | Judul dan teks utama. |
+| Text grey | `#626262` | Teks pendukung. |
 
 ## Status
 
 Project masih menggunakan halaman starter Astro. Konteks untuk coding agent sudah
 siap; global CSS dan halaman website adalah tahap berikutnya.
 
-Rencana navigasi: **Beranda, Tentang, Anggota, Galeri**, masing-masing pada halaman
-terpisah. Foto anggota dan galeri memakai placeholder terlebih dahulu. Tidak ada
-artikel/blog dalam lingkup awal.
+Halaman dan palet di atas masih berupa rencana, belum tampilan yang sudah jadi.
 
 ## Menjalankan project
 
@@ -46,5 +79,4 @@ membutuhkan API key atau dependency AI.
 ## Referensi
 
 - [Dokumentasi Astro](https://docs.astro.build)
-- [Panduan AGENTS.md dari OpenAI](https://developers.openai.com/es-419/docs/agent-configuration/agents-md)
 - [Referensi komunitas WRI](https://wridev.id/en/)
