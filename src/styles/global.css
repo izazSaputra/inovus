@@ -1,0 +1,71 @@
+:root {
+  --background: oklch(98.455% 0.00264 106.448);
+  --surface: oklch(100% 0 0);
+
+  --primary: oklch(42.429% 0.22493 264.599);
+  --accent: oklch(65.82% 0.22366 35.359);
+
+  --border: oklch(90.67% 0 0);
+  --text: oklch(19.573% 0 0);
+  --text-muted: oklch(49.616% 0 0);
+
+  --placeholder-color: var(var(--border));
+  --frame: oklch(25.4% 0.0209 86.3deg / 20%);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  color: var(--text);
+  background-color: var(--background);
+}
+
+hr {
+  border: none;
+  height: 1px;
+  margin: 0 -7.8125vw;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--frame) 0px,
+    var(--frame) 20px,
+    transparent 20px,
+    transparent 32px
+  );
+}
+
+.container {
+  position: relative;
+  height: fit-content;
+  margin: 0 160px;
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      var(--frame) 0px,
+      var(--frame) 20px,
+      transparent 20px,
+      transparent 32px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      var(--frame) 0px,
+      var(--frame) 20px,
+      transparent 20px,
+      transparent 32px
+    );
+  background-position:
+    left top,
+    right top;
+  background-size:
+    1px 100%,
+    1px 100%;
+  background-repeat: no-repeat;
+}
+
+.component {
+  text-align: center;
+  padding: 60px 0;
+}
