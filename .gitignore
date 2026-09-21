@@ -4,6 +4,7 @@ dist/
 # generated types
 .astro/
 
+
 # dependencies
 node_modules/
 
@@ -22,3 +23,8 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# ai-development-guidelines
+AGENTS.md
+CLAUDE.md
+./docs/project-brief.md
