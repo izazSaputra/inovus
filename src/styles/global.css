@@ -1,6 +1,55 @@
+@font-face {
+  font-family: "Open Sauce One";
+  src: url("/fonts/OpenSauceOne-Regular.tff") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
 
+@font-face {
+  font-family: "Open Sauce One";
+  src: url("/fonts/OpenSauceOne-Medium.tff") format("truetype");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Open Sauce One";
+  src: url("/fonts/OpenSauceOne-Bold.tff") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Offbit Dot";
+  src: url("fonts/OffBit-Dot.tff") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Offbit Dot";
+  src: url("fonts/OffBit-DotBold.tff") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Offbit";
+  src: url("fonts/OffBit-Bold.tff") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
 
 :root {
+  --font-sans: "Open Sauce One", Arial, sans-serif;
+  --font-display: "Offbit Dot", "Courier New", "Offbit", monospace;
+
   --background: oklch(98.455% 0.00264 106.448);
   --surface: oklch(100% 0 0);
 
@@ -24,7 +73,7 @@
 body {
   color: var(--text);
   background-color: var(--background);
-  font-family: ""
+  font-family: "";
 }
 
 hr {
@@ -72,4 +121,3 @@ hr {
   text-align: center;
   padding: 60px 0;
 }
-
