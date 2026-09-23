@@ -1,5 +1,10 @@
 ---
-const navLinks = [{ name: "Home", url: "/" }];
+const navLinks = [
+  { name: "Home", url: "/" },
+  { name: "Our Story", url: "/tentang" },
+  { name: "The People", url: "/anggota" },
+  { name: "Moments", url: "/galeri" },
+];
 
 const pathName = Astro.url.pathname;
 ---
@@ -27,3 +32,41 @@ const pathName = Astro.url.pathname;
     </ul>
   </div>
 </nav>
+
+<style>
+  nav {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+    height: 80px;
+    padding: 0 11.75rem;
+    inset: 0;
+    background-color: var(--background);
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--frame) 0px,
+      var(--frame) 20px,
+      transparent 20px,
+      transparent 32px
+    );
+    background-position: bottom;
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+  }
+
+  .nav-elements {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  ul {
+    display: flex;
+    gap: 60px;
+    list-style: none;
+    margin: 0 auto;
+  }
+</style>

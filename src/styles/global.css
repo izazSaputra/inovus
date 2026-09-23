@@ -122,3 +122,13 @@ hr {
   padding: 60px 0;
 }
 
+a {
+  text-decoration: none;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-weight: 400;
+}
+
+a:hover {
+  color: var(--primary);
+}
