@@ -1,0 +1,29 @@
+---
+const navLinks = [{ name: "Home", url: "/" }];
+
+const pathName = Astro.url.pathname;
+---
+
+<nav>
+  <div class="nav-elements">
+    <ul>
+      {
+        navLinks.map((link) => {
+          const isActive =
+            link.url === "/"
+              ? pathName === "/"
+              : pathName.replace(/\/$/, "") === link.url.replace(/\/$/, "");
+
+          return (
+            <li>
+              <a href={link.url} class={isActive ? "active" : ""}>
+                {" "}
+                {link.name}{" "}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</nav>
