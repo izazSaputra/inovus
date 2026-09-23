@@ -1,9 +1,18 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Global/Navbar.astro";
+import Hero from "../components/Home/heroInovus.astro";
+import AboutPreview from "../components/Home/aboutPreview.astro";
+import MemberPreview from "../components/Home/memberPreview.astro";
+import GalleryPreview from "../components/Home/galleryPreview.astro";
 ---
 
 <Layout pageTitle="Inovus's Class Portfolio">
   <Navbar />
-  <div class="container"></div>
+  <div class="container">
+    <Hero />
+    <AboutPreview />
+    <MemberPreview />
+    <GalleryPreview />
+  </div>
 </Layout>
