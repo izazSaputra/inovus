@@ -48,7 +48,8 @@
 
 :root {
   --font-sans: "Open Sauce One", Arial, sans-serif;
-  --font-display: "Offbit Dot", "Courier New", "Offbit", monospace;
+  --font-display: "Offbit Dot", "Courier New", monospace;
+  --font-display-none: "Offbit", "Courier New", monospace;
 
   --background: oklch(98.455% 0.00264 106.448);
   --surface: oklch(100% 0 0);
