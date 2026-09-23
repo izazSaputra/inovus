@@ -4,79 +4,63 @@
 
 # Inovus
 
-Website profil kelas PTI-B angkatan 2025, Universitas Negeri Malang.
-Dibangun dengan Astro sebagai tempat kenalan sama anak-anak kelas, melihat
-kebersamaan, dan menyimpan cerita lewat foto. Satu tempat buat perjalanan kuliah
-kita, dari awal masuk sampai jadi kenangan.
+Class profile website of PTI-B batch 2025, State University of Malang. Built with Astro as a place to get to know the classmates, see the togetherness, and store stories through photos. One place for our college journey, from the beginning until it becomes memories.
 
-## Tentang website
+## About website
 
-Inovus dirancang sebagai website dengan beberapa halaman:
+Inovus is designed as a website with several pages:
 
-| Halaman | Isi yang direncanakan |
-| --- | --- |
-| **Beranda** | Perkenalan singkat Inovus dan cuplikan kehidupan kelas. |
-| **Tentang** | Identitas PTI-B, cerita kelas, dan struktur pengurus. |
-| **Anggota** | Kartu anggota, nama panggilan, dan sosial media opsional. |
-| **Galeri** | Album foto kegiatan dan momen kebersamaan. |
+| Pages          | Planned content                                               |
+| -------------- | ------------------------------------------------------------- |
+| **Home**       | A brief introduction to Inovus and a glimpse into class life. |
+| **Our Story**  | PTI-B's identity, class stories, and management structure.    |
+| **The People** | Membership card, nickname, and social media are optional.     |
+| **Moments**    | Photo album of activities and moments together.               |
 
-Fokusnya profil kelas dan album kenangan digital, tanpa artikel atau blog.
-Foto anggota dan galeri menggunakan placeholder sampai aset asli tersedia.
+The focus is on class profiles and a digital yearbook, without articles or blogs. Member photos and galleries use placeholders until the real assets are available.
 
-## Identitas visual
+## Visual Identity
 
-Tema terang dengan putih sebagai dasar, biru sebagai warna utama, dan oren
-sebagai aksen. Palet yang disepakati untuk implementasi:
+A bright theme with white as the base, blue as the main color, and orange as the accent. The agreed palette for implementation:
 
-| Warna | Hex | Peran |
-| --- | --- | --- |
-| Warm white | `#FAFAF8` | Background utama. |
-| White | `#FFFFFF` | Navbar, kartu, dan panel. |
-| Persian Blue | `#0C35C6` | Tombol utama dan identitas brand. |
-| Blazing Flame | `#FC480E` | Aksen dan detail dekoratif. |
-| Alabaster Grey | `#E0E0E0` | Pembatas dan placeholder. |
-| Onyx | `#151515` | Judul dan teks utama. |
-| Text grey | `#626262` | Teks pendukung. |
+| Color          | Hex       | Role                         |
+| -------------- | --------- | ---------------------------- |
+| Warm white     | `#FAFAF8` | Main Background.             |
+| White          | `#FFFFFF` | Navbar, Card, dan Panel.     |
+| Persian Blue   | `#0C35C6` | Identity Brand & Main Button |
+| Blazing Flame  | `#FC480E` | Accent & Decoration Detail   |
+| Alabaster Grey | `#E0E0E0` | Border & Placeholders        |
+| Onyx           | `#151515` | Title & Main Text            |
+| Text grey      | `#626262` | Supporting Text              |
 
 ## Status
 
-Project masih menggunakan halaman starter Astro. Konteks untuk coding agent sudah
-siap; global CSS dan halaman website adalah tahap berikutnya.
+The project is still using the Astro starter page. The context for the coding agent is ready; global CSS and the website page are the next stages.
 
-Halaman dan palet di atas masih berupa rencana, belum tampilan yang sudah jadi.
+The pages and palettes above are still just plans, not the finished look yet.
 
-## Menjalankan project
+## Running the Project
 
-Gunakan Node.js `>=22.12.0` dan Bun. Dependency mengikuti `package.json` dan `bun.lock`.
+Use Node.js `>=22.12.0` and Bun. Dependency follow `package.json` and `bun.lock`.
 
 ```sh
 bun install
 bun run dev --background
 ```
 
-Port default adalah `4321`. Ikuti URL dari CLI jika port tersebut sudah dipakai.
+The default port is `4321`. Follow the URL from the CLI if that port is already in use.
 
-| Command | Kegunaan |
-| --- | --- |
-| `bun run astro dev status` | Melihat status background server. |
-| `bun run astro dev logs` | Membaca log server. |
-| `bun run astro dev stop` | Menghentikan background server. |
-| `bun run build` | Membuat production build di `dist/`. |
-| `bun run preview` | Meninjau hasil build secara lokal. |
+| Command                    | Use                                   |
+| -------------------------- | ------------------------------------- |
+| `bun run astro dev status` | Checking status background server     |
+| `bun run astro dev logs`   | Read log server.                      |
+| `bun run astro dev stop`   | Stop background server.               |
+| `bun run build`            | Creating production build di `dist/`. |
+| `bun run preview`          | Reviewing the build results locally.  |
 
-Belum ada script lint, test, atau type-check terpisah.
+There’s no separate lint, test, or type-check script yet.
 
-## Panduan pengembangan dengan AI
+## Reference
 
-- [AGENTS.md](AGENTS.md): aturan kerja agent, struktur repo, command, verifikasi.
-- [CLAUDE.md](CLAUDE.md): mengarahkan Claude ke aturan bersama.
-- [Project brief](docs/project-brief.md): identitas, navigasi, palet, placeholder, tahap pengerjaan.
-
-Perbarui brief ketika keputusan produk berubah agar sesi berikutnya memiliki
-konteks yang sama. Setup berupa dokumentasi untuk coding agent dan tidak
-membutuhkan API key atau dependency AI.
-
-## Referensi
-
-- [Dokumentasi Astro](https://docs.astro.build)
-- [Referensi komunitas WRI](https://wridev.id/en/)
+- [Astro Documentation](https://docs.astro.build)
+- [WRI Community Reference](https://wridev.id/en/)
