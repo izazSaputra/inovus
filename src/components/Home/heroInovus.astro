@@ -8,7 +8,7 @@
   </p>
 
   <h1 id="hero-title">
-    Beda kapal.
+    Beda kepala.
     <span>Satu cerita.</span>
   </h1>
 
@@ -17,6 +17,16 @@
     <br />
     Dari PTI-B, Universitas Negeri Malang.
   </p>
+
+  <div class="hero-action">
+    <a class="button-primary" href="/tentang">
+      Kenalan sama kita <span aria-hidden="true">↗</span>
+    </a>
+
+    <a class="button-secondary" href="/galeri">
+      Lihat galeri <span aria-hidden="true">↗</span>
+    </a>
+  </div>
 </section>
 
 <style>
@@ -61,5 +71,23 @@
     color: var(--text-muted);
     font-size: 16px;
     line-height: 1.4;
+  }
+
+  .hero-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin-top: 32px;
+  }
+
+  .hero-action a {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
   }
 </style>
