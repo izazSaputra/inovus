@@ -90,4 +90,28 @@
     font-size: 14px;
     font-weight: 500;
   }
+
+  .button-primary {
+    background-color: var(--primary);
+    color: var(--surface);
+    transition:
+      background-color 250ms ease,
+      color 250ms ease;
+  }
+
+  .button-primary:hover {
+    color: var(--background);
+    background-color: var(--accent);
+  }
+
+  .button-secondary:hover {
+    color: var(--accent);
+  }
+
+  .hero-action a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  
 </style>
