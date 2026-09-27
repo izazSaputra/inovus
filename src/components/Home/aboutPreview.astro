@@ -1,0 +1,98 @@
+---
+
+---
+
+<section class="about-preview" aria-labelledby="about-title">
+  <div class="about-heading">
+    <p class="about-label">01 / TENTANG</p>
+
+    <h2 class="about-title">
+      Satu kelas.
+      <span>Banyak cerita.</span>
+    </h2>
+  </div>
+
+  <div class="about-content">
+    <p>
+      Kenalin, kami Inovus. Kelas PTI-B angkatan 2025 dari Universitas Negeri
+      Malang.
+    </p>
+    <p>
+      Website ini jadi tempat menyimpan cerita dan kebersamaan selama kuliah.
+      Dari perkenalan pertama sampai momen-momen kecil yang ingin kita ingat.
+    </p>
+    <a href="/tentang">
+      Cerita tentang kita <span aria-hidden="true">↗</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .about-preview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: 64px;
+    padding: 64px 32px 80px;
+  }
+
+  .about-label {
+    margin-bottom: 24px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
+
+  h2 {
+    font-size: 3.5rem;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -2px;
+  }
+
+  h2 span {
+    display: block;
+    color: var(--primary);
+    font-family: var(--font-display-none);
+    font-weight: 700;
+    letter-spacing: 0.8px;
+  }
+
+  .about-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .about-content p {
+    font-size: 1em;
+    line-height: 1.8;
+  }
+
+  .about-content p + p {
+    color: var(--text-muted);
+  }
+
+  .about-content a {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 8px;
+    padding-block: 8px;
+    color: var(--primary);
+    font-size: 1em;
+    font-weight: 500;
+    transition: color 200ms ease;
+  }
+
+  .about-content a:hover {
+    color: var(--text);
+  }
+
+  .about-content a:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 4px;
+  }
+</style>
