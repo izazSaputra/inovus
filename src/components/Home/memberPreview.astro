@@ -9,16 +9,16 @@ import Dila from "../../assets/members/dila.jpg";
 const membersPreview = [
   {
     id: "01",
-    name: "Mochamad Rasha Dwi Saputra",
-    role: "Ketua Kelas",
-    photo: Rasha,
-  },
-  { id: "02", name: "Fatimatuzzahrah", role: "Wakil Ketua", photo: Zaya },
-  {
-    id: "03",
     name: "Falihatus Sa'adah Azizah Rahmah",
     role: "Sekretaris",
     photo: Fali,
+  },
+  { id: "02", name: "Mochamad Rasha Dwi Saputra", role: "Ketua Kelas", photo: Rasha },
+  {
+    id: "03",
+    name: "Fatimatuzzahrah",
+    role: "Wakil Ketua",
+    photo: Zaya,
   },
   {
     id: "04",
@@ -27,6 +27,28 @@ const membersPreview = [
     photo: Dila,
   },
 ];
+
+// const membersPreview = [
+//   {
+//     id: "01",
+//     name: "Mochamad Rasha Dwi Saputra",
+//     role: "Ketua Kelas",
+//     photo: Rasha,
+//   },
+//   { id: "02", name: "Fatimatuzzahrah", role: "Wakil Ketua", photo: Zaya },
+//   {
+//     id: "03",
+//     name: "Falihatus Sa'adah Azizah Rahmah",
+//     role: "Sekretaris",
+//     photo: Fali,
+//   },
+//   {
+//     id: "04",
+//     name: "Gusti Fadila Khoirun Nisa",
+//     role: "Bendahara",
+//     photo: Dila,
+//   },
+// ];
 ---
 
 <section class="member-preview" aria-labelledby="member-title">
@@ -53,7 +75,7 @@ const membersPreview = [
               src={member.photo}
               class="member-image"
               alt={`Foto $member.name`}
-              width={600}
+              width={1120}
               loading="lazy"
             />
           </div>
@@ -144,7 +166,11 @@ const membersPreview = [
     height: 100%;
     object-fit: cover;
     object-position: center;
+
+    transform: scale(1.8);
+    transform-origin: center 15%;
   }
+
   .member-number {
     position: absolute;
     top: 16px;
