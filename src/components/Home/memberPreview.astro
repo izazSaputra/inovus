@@ -1,9 +1,31 @@
 ---
+import { Image } from "astro:assets";
+
+import Rasha from "../../assets/members/rasha.jpg";
+import Zaya from "../../assets/members/zaya.jpg";
+import Fali from "../../assets/members/falihatus.jpg";
+import Dila from "../../assets/members/dila.jpg";
+
 const membersPreview = [
-  { id: "01", name: "Mochamad Rasha Dwi Saputra", role: "Ketua Kelas" },
-  { id: "02", name: "Fatimatuzzahrah", role: "Wakil Ketua" },
-  { id: "03", name: "Falihatus Sa'adah Azizah Rahmah", role: "Sekretaris" },
-  { id: "04", name: "Gusti Fadila Khoirun Nisa", role: "Bendahara" },
+  {
+    id: "01",
+    name: "Mochamad Rasha Dwi Saputra",
+    role: "Ketua Kelas",
+    photo: Rasha,
+  },
+  { id: "02", name: "Fatimatuzzahrah", role: "Wakil Ketua", photo: Zaya },
+  {
+    id: "03",
+    name: "Falihatus Sa'adah Azizah Rahmah",
+    role: "Sekretaris",
+    photo: Fali,
+  },
+  {
+    id: "04",
+    name: "Gusti Fadila Khoirun Nisa",
+    role: "Bendahara",
+    photo: Dila,
+  },
 ];
 ---
 
@@ -27,10 +49,13 @@ const membersPreview = [
       membersPreview.map((member) => (
         <article class="member-card">
           <div class="member-photo">
-            <span class="member-number" aria-hidden="true">
-              {member.id}
-            </span>
-            <span>Foto menyusul</span>
+            <Image
+              src={member.photo}
+              class="member-image"
+              alt={`Foto $member.name`}
+              width={600}
+              loading="lazy"
+            />
           </div>
 
           <h3>{member.name}</h3>
@@ -104,15 +129,22 @@ const membersPreview = [
 
   .member-photo {
     position: relative;
-    display: grid;
     place-items: center;
     aspect-ratio: 3 / 4;
     border-radius: 12px;
     background-color: var(--placeholder-color);
-    color: var(--text-muted);
-    font-size: 12px;
+    overflow: hidden;
   }
 
+  .member-image {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
   .member-number {
     position: absolute;
     top: 16px;
