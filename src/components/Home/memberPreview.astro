@@ -1,0 +1,136 @@
+---
+const membersPreview = [
+  { id: "01", name: "Mochamad Rasha Dwi Saputra", role: "Ketua Kelas" },
+  { id: "02", name: "Fatimatuzzahrah", role: "Wakil Ketua" },
+  { id: "03", name: "Falihatus Sa'adah Azizah Rahmah", role: "Sekretaris" },
+  { id: "04", name: "Gusti Fadila Khoirun Nisa", role: "Bendahara" },
+];
+---
+
+<section class="member-preview" aria-labelledby="member-title">
+  <div class="member-heading">
+    <div>
+      <p class="member-label">02 / ANGGOTA</p>
+
+      <h2 id="member-title">
+        Kenalan
+        <span> dulu, yuk.</span>
+      </h2>
+    </div>
+
+    <a href="/anggota" class="member-link"
+      >Semua anggota <span aria-hidden="true">&#8599;</span></a
+    >
+  </div>
+  <div class="member-grid">
+    {
+      membersPreview.map((member) => (
+        <article class="member-card">
+          <div class="member-photo">
+            <span class="member-number" aria-hidden="true">
+              {member.id}
+            </span>
+            <span>Foto menyusul</span>
+          </div>
+
+          <h3>{member.name}</h3>
+          <p>{member.role}</p>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .member-preview {
+    padding: 64px 32px 80px;
+  }
+
+  .member-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    margin-bottom: 40px;
+  }
+
+  .member-label {
+    margin-bottom: 24px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
+
+  h2 {
+    font-size: 4rem;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -2px;
+  }
+
+  h2 span {
+    color: var(--primary);
+    font-weight: 700;
+    font-family: var(--font-display-none);
+    letter-spacing: 0;
+  }
+
+  .member-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    padding-block: 8px;
+    color: var(--primary);
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .member-link:hover {
+    color: var(--text);
+  }
+
+  .member-link:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 4px;
+  }
+
+  .member-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .member-photo {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 3 / 4;
+    border-radius: 12px;
+    background-color: var(--placeholder-color);
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  .member-number {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    color: var(--primary);
+  }
+
+  h3 {
+    margin-top: 16px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .member-card p {
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+</style>
