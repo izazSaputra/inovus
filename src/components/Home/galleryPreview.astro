@@ -1,0 +1,131 @@
+---
+
+---
+
+<section class="gallery-preview" aria-labelledby="gallery-title">
+  <div class="gallery-heading">
+    <div>
+      <p class="gallery-label">03 / MOMEN</p>
+
+      <h2 id="gallery-title">
+        Yang bakal <span>kita inget.</span>
+      </h2>
+    </div>
+
+    <a class="gallery-link" href="/galeri">
+      Semua momen <span aria-hidden="true">&#8599;</span>
+    </a>
+  </div>
+make
+  <div class="gallery-grid">
+    <figure class="gallery-card">
+      <div class="gallery-photo">
+        <span>Foto menyusul</span>
+      </div>
+
+      <figcaption>
+        <h3>Ruang untuk kenangan</h3>
+        <p>Placeholder galeri</p>
+      </figcaption>
+    </figure>
+
+    <figure class="gallery-card">
+      <div class="gallery-photo">
+        <span>Foto menyusul</span>
+      </div>
+
+      <figcaption>
+        <h3>Cerita berikutnya</h3>
+        <p>Placeholder galeri</p>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .gallery-preview {
+    padding: 64px 32px 80px;
+  }
+
+  .gallery-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    margin-bottom: 40px;
+  }
+
+  .gallery-label {
+    margin-bottom: 24px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
+
+  h2 {
+    font-size: 48px;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -2px;
+  }
+
+  h2 span {
+    color: var(--primary);
+    font-family: var(--font-display-none);
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .gallery-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    padding-block: 8px;
+    color: var(--primary);
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .gallery-link:hover {
+    color: var(--text);
+  }
+
+  .gallery-link:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 4px;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 24px;
+  }
+
+  .gallery-photo {
+    display: grid;
+    place-items: center;
+    height: 320px;
+    overflow: hidden;
+    border-radius: 12px;
+    background-color: var(--placeholder-color);
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  figcaption {
+    margin-top: 16px;
+  }
+
+  h3 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  figcaption p {
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+</style>
