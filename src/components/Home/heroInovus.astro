@@ -31,9 +31,13 @@ import homePreview from "../../assets/indexPreview/previewIndex.jpg";
   </div>
 
   <div class="hero-photo">
+    <Image
+      src={homePreview}
+      alt="Foto bersama kelas PTI-B angkatan 2025 Universitas Negeri Malang"
+      class="hero-image"
+      width={2240}
+    />
     <span class="photo-label">INOVUS / PTI-B 2025</span>
-
-    <div class="photo-content"></div>
   </div>
 </section>
 
@@ -123,20 +127,30 @@ import homePreview from "../../assets/indexPreview/previewIndex.jpg";
 
   .hero-photo {
     position: relative;
-    display: grid;
-    place-items: center;
-    min-height: 400px;
+    height: 400px;
     margin-top: 64px;
-    padding: 32px;
+    overflow: hidden;
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 12px;
     background-color: var(--placeholder-color);
+  }
+
+  .hero-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 33.5%;
   }
 
   .photo-label {
     position: absolute;
-    top: 24px;
+    top: 18vw;
     left: 24px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: var(--background-blur);
+    color: var(--text);
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 2px;
