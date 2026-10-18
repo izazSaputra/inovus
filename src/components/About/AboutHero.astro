@@ -1,5 +1,9 @@
 ---
-
+const heroFacts = [
+  { label: "Kelas", value: "PTI-B" },
+  { label: "Angkatan", value: "2025" },
+  { label: "Kampus", value: "Universitas Negeri Malang" },
+];
 ---
 
 <section class="about-hero" aria-labelledby="about-hero-title">
@@ -8,19 +12,29 @@
   </p>
 
   <h1 id="about-hero-title">
-    Kenal
-    <span>Inovus</span>
+    Kenal <span>Inovus</span> <br />
     lebih dekat.
   </h1>
 
   <p class="about-hero-description">
     Kami mahasiswa PTI-B angkatan 2025 dari Universitas Negeri Malang.
   </p>
+
+  <dl class="about-hero-facts">
+    {
+      heroFacts.map((fact) => (
+        <div class="about-hero-fact">
+          <dt>{fact.label}</dt>
+          <dd>{fact.value}</dd>
+        </div>
+      ))
+    }
+  </dl>
 </section>
 
 <style>
   .about-hero {
-    padding: 160px 32px 96px;
+    padding: 160px 32px 0;
     text-align: center;
   }
 
@@ -39,7 +53,7 @@
   }
 
   .about-hero h1 {
-    margin-top: 56px;
+    margin-top: 30px;
     font-size: 72px;
     font-weight: 500;
     line-height: 1.05;
@@ -47,12 +61,13 @@
   }
 
   .about-hero h1 span {
-    display: block;
+    display: inline;
     color: var(--primary);
     font-family: var(--font-display);
-    font-size: 88px;
+    font-size: 1.2em;
     font-weight: 700;
     letter-spacing: -2px;
+    line-height: 0;
   }
 
   .about-hero-description {
@@ -61,5 +76,72 @@
     color: var(--text-muted);
     font-size: 16px;
     line-height: 1.6;
+  }
+
+  .about-hero-facts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 96px -32px 0;
+    background-image:
+      repeating-linear-gradient(
+        to right,
+        var(--frame) 0px,
+        var(--frame) 20px,
+        transparent 20px,
+        transparent 32px
+      ),
+      repeating-linear-gradient(
+        to right,
+        var(--frame) 0px,
+        var(--frame) 20px,
+        transparent 20px,
+        transparent 32px
+      );
+    background-position:
+      left top,
+      left bottom;
+    background-size:
+      100% 1px,
+      100% 1px;
+    background-repeat: no-repeat;
+  }
+
+  .about-hero-fact {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 32px;
+    text-align: left;
+  }
+
+  .about-hero-fact + .about-hero-fact {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      var(--frame) 0px,
+      var(--frame) 20px,
+      transparent 20px,
+      transparent 32px
+    );
+    background-position: left top;
+    background-size: 1px 100%;
+    background-repeat: no-repeat;
+  }
+
+  .about-hero-fact dt {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .about-hero-fact dd {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+  }
+
+  .about-hero-fact:first-child dd {
+    color: var(--primary);
   }
 </style>
