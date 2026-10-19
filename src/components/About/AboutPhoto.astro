@@ -1,0 +1,48 @@
+---
+import { Image } from "astro:assets";
+import classPhoto from "../../assets/indexPreview/previewIndex.jpg";
+---
+
+<section class="about-photo" aria-label="Foto bersama kelas Inovus">
+  <figure>
+    <div class="about-photo-frame">
+      <Image
+        src={classPhoto}
+        alt="Foto bersama kelas PTI-B angkatan 2025 Universitas Negeri Malang"
+        class="about-photo-image"
+        width={2240}
+      />
+    </div>
+
+    <figcaption>
+      <span>INOVUS / PTI-B 2025</span>
+      <span>Foto bersama kelas</span>
+    </figcaption>
+  </figure>
+</section>
+
+<style>
+  .about-photo {
+    padding: 64px 32px 80px;
+  }
+
+  .about-photo-frame {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background-color: var(--placeholder-color);
+  }
+
+  .about-photo-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 33%;
+  }
+
+  figcaption {
+    display: flex;
+  }
+</style>

@@ -2,11 +2,17 @@
 import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Global/Navbar.astro";
 import AboutHero from "../components/About/AboutHero.astro";
+import Footer from "../components/Global/Footer.astro";
+import AboutPhoto from "../components/About/AboutPhoto.astro";
 ---
 
 <Layout pageTitle="Tentang Inovus">
-    <Navbar />
-    <div class="container">
-        <AboutHero />
-    </div>
+  <Navbar />
+  <div class="container">
+    <AboutHero />
+    <hr />
+    <AboutPhoto />
+    <hr />
+    <Footer />
+  </div>
 </Layout>
