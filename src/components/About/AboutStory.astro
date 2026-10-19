@@ -1,0 +1,164 @@
+---
+const values = [
+  {
+    number: "01",
+    title: "Ketawa bareng",
+    description:
+      "Suasana kelas yang bikin capeknya kuliah terasa lebih ringan.",
+  },
+  {
+    number: "02",
+    title: "Saling bantu",
+    description: "Kalau ada yang kesulitan, yang lain ikut turun tangan.",
+  },
+  {
+    number: "03",
+    title: "Peduli",
+    description:
+      "Saling jaga dan saling perhatian, di dalam maupun di luar kelas.",
+  },
+];
+---
+
+<section class="about-story" aria-labelledby="about-story-title">
+  <div class="about-story-intro">
+    <div>
+      <p class="about-story-label">01 / CERITA</p>
+      <h2 id="about-story-title">
+        Inovatif
+        <span>+ us.</span>
+      </h2>
+    </div>
+
+    <div class="about-story-content">
+      <p>
+        Inovus berasal dari dua kata: inovatif dan us, yang artinya kita.
+        Ide-ide baru terasa lebih seru kalau dikerjakan bareng-bareng.
+      </p>
+      <p>
+        Di luar tugas dan jadwal kuliah, yang paling kami ingat justru hal-hal
+        sederhana: ketawa bareng, saling bantu waktu ada yang kesulitan, dan
+        saling peduli satu sama lain.
+      </p>
+    </div>
+  </div>
+  <ul class="about-story-values">
+    {
+      values.map((value) => (
+        <li class="about-story-value">
+          <span>{value.number}</span>
+          <h3>{value.title}</h3>
+          <p>{value.description}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .about-story {
+    padding: 64px 32px 12px;
+  }
+
+  .about-story-intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: 64px;
+  }
+
+  .about-story-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    letter-spacing: 2px;
+  }
+
+  .about-story h2 {
+    font-size: 50px;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -2px;
+  }
+
+  .about-story h2 span {
+    display: block;
+    color: var(--primary);
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+
+  .about-story-content {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .about-story-content p {
+    line-height: 1.8;
+  }
+
+  .about-story-content p + p {
+    color: var(--text-muted);
+  }
+
+  .about-story-values {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 80px -25px 0;
+    list-style: none;
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--frame) 0px,
+      var(--frame) 20px,
+      transparent 20px,
+      transparent 32px
+    );
+    background-position: left top;
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+  }
+
+  .about-story-value {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 32px;
+  }
+
+  .about-story-value + .about-story-value {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      var(--frame) 0px,
+      var(--frame) 20px,
+      transparent 20px,
+      transparent 32px,
+    );
+    background-position: left top;
+    background-size: 1px 100%;
+    background-repeat: no-repeat;
+  }
+
+  .about-story-value span {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
+
+  .about-story-value h3 {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+
+  }
+
+  .about-story-value p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-muted);
+
+  }
+</style>
