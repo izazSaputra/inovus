@@ -55,7 +55,7 @@ readable. Separators alone should not communicate an interactive state.
 - The local font files and `@font-face` declarations live under `public/fonts`
   and `src/styles/global.css` respectively. Preserve their existing family
   names and weights when using the CSS variables `--font-sans`,
-  `--font-display`, and `--font-display-none`.
+  `--font-display`, and `--font-display-solid`.
 
 ## Layout and components
 

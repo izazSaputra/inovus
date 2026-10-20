@@ -49,7 +49,10 @@
 :root {
   --font-sans: "Open Sauce One", Arial, sans-serif;
   --font-display: "Offbit Dot", "Courier New", monospace;
-  --font-display-none: "Offbit", "Courier New", monospace;
+  --font-display-solid: "Offbit", "Courier New", monospace;
+
+  --text-display: 88px;
+  --text-heading: 56px;
 
   --background: oklch(98.455% 0.00264 106.448);
   --background-blur: oklch(98.455% 0.00253 107.122 / 0.293);
