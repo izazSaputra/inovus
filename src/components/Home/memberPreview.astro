@@ -79,7 +79,7 @@ const membersPreview = [
             <Image
               src={member.photo}
               class="member-image"
-              alt={`Foto $member.name`}
+              alt={`Foto ${member.name}`}
               width={1120}
               loading="lazy"
             />
@@ -126,10 +126,6 @@ const membersPreview = [
     font-weight: 700;
     font-family: var(--font-display-none);
     letter-spacing: 0;
-  }
-
-  h3:hover {
-    color: var(--accent);
   }
 
   .member-link {
