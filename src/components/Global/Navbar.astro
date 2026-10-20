@@ -1,4 +1,9 @@
 ---
+
+import { Image } from "astro:assets";
+
+import logoInovus from "../../assets/logo/logo_inovus.svg";
+
 const navLinks = [
   { name: "Home", url: "/" },
   { name: "Our Story", url: "/about" },
@@ -9,40 +14,46 @@ const navLinks = [
 const pathName = Astro.url.pathname;
 ---
 
-<nav>
-  <div class="nav-elements">
-    <ul>
-      {
-        navLinks.map((link) => {
-          const isActive =
-            link.url === "/"
-              ? pathName === "/"
-              : pathName.replace(/\/$/, "") === link.url.replace(/\/$/, "");
+<nav aria-label="Navigasi utama">
+  <a href="/" class="nav-logo">
+    <Image src={logoInovus} alt="Inovus" height={32} />
+  </a>
+  <ul>
+    {
+      navLinks.map((link) => {
+        const isActive =
+          link.url === "/"
+            ? pathName === "/"
+            : pathName.replace(/\/$/, "") === link.url.replace(/\/$/, "");
 
-          return (
-            <li>
-              <a href={link.url} class={isActive ? "active" : ""}>
-                {" "}
-                {link.name}{" "}
-              </a>
-            </li>
-          );
-        })
-      }
-    </ul>
-  </div>
+        return (
+          <li>
+            <a
+              href={link.url}
+              class={isActive ? "active" : ""}
+              aria-current={isActive ? "page" : undefined}
+            >
+              {link.name}
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
 </nav>
 
 <style>
   nav {
     position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    z-index: 1000;
     height: 80px;
-    padding: 0 11.75rem;
-    inset: 0;
+    padding: 0 192px;
     background-color: var(--background);
     background-image: repeating-linear-gradient(
       to right,
@@ -56,22 +67,39 @@ const pathName = Astro.url.pathname;
     background-repeat: no-repeat;
   }
 
-  .nav-elements {
+  .nav-logo {
     display: flex;
     align-items: center;
-    flex: 1;
-    justify-content: flex-end;
+  }
+
+  .nav-logo img {
+    display: block;
+    width: auto;
+    height: 32px;
   }
 
   ul {
     display: flex;
-    gap: 60px;
+    gap: 48px;
     list-style: none;
-    margin: 0 auto;
   }
 
-  .nav-elements ul a.active {
-    font-weight: 500;
+  ul a {
+    font-size: 14px;
+    transition: color 200ms ease;
+  }
+
+  ul a:hover,
+  ul a.active {
     color: var(--accent);
+  }
+
+  ul a.active {
+    font-weight: 500;
+  }
+
+  nav a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
   }
 </style>
