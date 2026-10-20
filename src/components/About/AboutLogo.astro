@@ -1,0 +1,139 @@
+---
+import { Image } from "astro:assets";
+
+import logoInovus from "../../assets/logo/logo_inovus.svg";
+import siluetI from "../../assets/logo/siluet_i.svg";
+import siluetU from "../../assets/logo/siluet_u.svg";
+import siluetB from "../../assets/logo/siluet_b.svg";
+
+const logoMeanings = [
+  {
+    logo: logoInovus,
+    title: "Pilar",
+    description: "Menggambarkan kekuatan, kreativitas, dan kebersamaan.",
+  },
+  {
+    logo: siluetI,
+    title: "Siluet huruf i",
+    description:
+      "Huruf awal dari kata “innovative”, sekaligus siluet seseorang yang berdampak positif.",
+  },
+  {
+    logo: siluetU,
+    title: "Siluet huruf u",
+    description:
+      "Berasal dari kata “us” yang berarti “kami”. Kami adalah keluarga.",
+  },
+  {
+    logo: siluetB,
+    title: "Siluet huruf B",
+    description:
+      "Saat logo diputar 90°, bentuknya menjadi huruf B, penanda kami dari offering B.",
+  },
+];
+---
+
+<section class="about-logo" aria-labelledby="about-logo-title">
+  <div class="about-logo-heading">
+    <p class="about-logo-label">02 / LOGO</p>
+    <h2 id="about-logo-title">
+      Satu bentuk.
+      <span>Empat makna.</span>
+    </h2>
+  </div>
+
+  <ul class="about-logo-list">
+    {
+      logoMeanings.map((meaning) => (
+        <li class="about-logo-item">
+          <div class="about-logo-mark">
+            <Image src={meaning.logo} alt="" class="about-logo-image" />
+          </div>
+          <div class="about-logo-text">
+            <h3>{meaning.title}</h3>
+            <p>{meaning.description}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .about-logo {
+    padding: 64px 32px 80px;
+  }
+
+  .about-logo-label {
+    margin-bottom: 24px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
+
+  .about-logo h2 {
+    font-size: 50px;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -2px;
+  }
+
+  .about-logo h2 span {
+    display: block;
+    color: var(--primary);
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+
+  .about-logo-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 48px 64px;
+    margin-top: 64px;
+    list-style: none;
+  }
+
+  .about-logo-item {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    align-items: start;
+    gap: 24px;
+  }
+
+  .about-logo-mark {
+    width: 96px;
+    height: 96px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background-color: var(--surface);
+  }
+
+  .about-logo-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .about-logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .about-logo-text h3 {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+  }
+
+  .about-logo-text p {
+    max-width: 340px;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+</style>
