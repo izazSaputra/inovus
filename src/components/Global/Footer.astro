@@ -1,13 +1,9 @@
----
-
----
-
 <footer class="footer">
   <div class="footer-top">
-    <div class="footer-brand">
-      <a href="/" class="footer-logo">inovus<span>.</span></a>
-      <p>Beda kepala. <span>Satu cerita</span>.</p>
-    </div>
+    <p class="footer-tagline">
+      Beda kepala.
+      <span>Satu cerita.</span>
+    </p>
 
     <nav aria-label="Navigasi footer">
       <a href="/">Home</a>
@@ -21,11 +17,14 @@
     <span>PTI-B / ANGKATAN 2025</span>
     <span>Universitas Negeri Malang</span>
   </div>
+
+  <p class="footer-wordmark" aria-hidden="true">inovus<span>.</span></p>
 </footer>
 
 <style>
   .footer {
-    padding: 48px 32px 24px;
+    overflow: hidden;
+    padding: 64px 32px 0;
     background-color: var(--primary);
     color: var(--surface);
   }
@@ -33,34 +32,24 @@
   .footer-top {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: 48px;
-    padding-bottom: 40px;
+    padding-bottom: 48px;
   }
 
-  .footer-logo {
-    color: var(--surface);
-    font-size: 40px;
-    font-weight: 700;
-    letter-spacing: -2px;
+  .footer-tagline {
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -1px;
   }
 
-  .footer-logo span {
+  .footer-tagline span {
+    display: block;
     color: var(--accent);
-  }
-
-  .footer-brand p {
-    margin-top: 12px;
-    font-size: 14px;
-    line-height: 1.5;
-  }
-
-  .footer-brand p span {
-    margin-top: 12px;
-    font-size: 14px;
-    line-height: 1.5;
-    color: var(--accent);
+    font-family: var(--font-display-solid);
     font-weight: 700;
+    letter-spacing: 0;
   }
 
   nav {
@@ -72,24 +61,14 @@
     padding-block: 8px;
     color: var(--surface);
     font-size: 14px;
+    transition: color 200ms ease;
   }
 
-  .footer a:hover {
-    color: var(--surface);
-    opacity: 0.8;
-  }
-
-  .footer a:focus-visible {
-    outline: 2px solid var(--surface);
-    outline-offset: 4px;
-  }
-
-  .footer nav a:hover {
+  nav a:hover {
     color: var(--accent);
-    opacity: 0.8;
   }
 
-  .footer nav a:focus-visible {
+  nav a:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 4px;
   }
@@ -102,5 +81,17 @@
     border-top: 1px solid var(--surface);
     font-size: 11px;
     letter-spacing: 1px;
+  }
+
+  .footer-wordmark {
+    margin-top: 48px;
+    font-size: calc((100vw - 384px) * 0.31);
+    font-weight: 700;
+    line-height: 0.75;
+    letter-spacing: -0.06em;
+  }
+
+  .footer-wordmark span {
+    color: var(--accent);
   }
 </style>
