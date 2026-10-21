@@ -1,3 +1,12 @@
+---
+const pageLinks = [
+  { name: "Home", url: "/" },
+  { name: "Our Story", url: "/about" },
+  { name: "The People", url: "/member" },
+  { name: "Moments", url: "/gallery" },
+];
+---
+
 <footer class="footer">
   <div class="footer-top">
     <p class="footer-tagline">
@@ -5,12 +14,36 @@
       <span>Satu cerita.</span>
     </p>
 
-    <nav aria-label="Navigasi footer">
-      <a href="/">Home</a>
-      <a href="/about">Our Story</a>
-      <a href="/member">The People</a>
-      <a href="/gallery">Moments</a>
-    </nav>
+    <div class="footer-columns">
+      <nav class="footer-column" aria-labelledby="footer-pages-title">
+        <p id="footer-pages-title" class="footer-column-title">HALAMAN</p>
+        <ul>
+          {
+            pageLinks.map((link) => (
+              <li>
+                <a href={link.url}>{link.name}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="footer-column">
+        <p class="footer-column-title">IKUTI KAMI</p>
+        <ul>
+          <li>
+            <a
+              href="https://www.instagram.com/inovus.ofc/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Instagram <span aria-hidden="true">↗</span>
+            </a>
+            <p class="footer-handle">@inovus.ofc</p>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 
   <div class="footer-bottom">
@@ -18,7 +51,16 @@
     <span>Universitas Negeri Malang</span>
   </div>
 
-  <p class="footer-wordmark" aria-hidden="true">inovus<span>.</span></p>
+  <div class="footer-end">
+    <p class="footer-wordmark" aria-hidden="true">inovus<span>.</span></p>
+
+    <div class="footer-side">
+      <a href="#" class="footer-top-link">
+        Kembali ke atas <span aria-hidden="true">↑</span>
+      </a>
+      <p class="footer-copyright">© 2026 Inovus</p>
+    </div>
+  </div>
 </footer>
 
 <style>
@@ -52,25 +94,48 @@
     letter-spacing: 0;
   }
 
-  nav {
+  .footer-columns {
     display: flex;
-    gap: 32px;
+    gap: 96px;
   }
 
-  nav a {
-    padding-block: 8px;
+  .footer-column-title {
+    margin-bottom: 16px;
+    opacity: 0.6;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
+
+  .footer-column ul {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none;
+  }
+
+  .footer-column a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding-block: 4px;
     color: var(--surface);
     font-size: 14px;
     transition: color 200ms ease;
   }
 
-  nav a:hover {
+  .footer-column a:hover {
     color: var(--accent);
   }
 
-  nav a:focus-visible {
+  .footer-column a:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 4px;
+  }
+
+  .footer-handle {
+    opacity: 0.6;
+    font-size: 12px;
   }
 
   .footer-bottom {
@@ -83,15 +148,55 @@
     letter-spacing: 1px;
   }
 
+  .footer-end {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 48px;
+    margin-top: 40px;
+  }
+
   .footer-wordmark {
-    margin-top: 48px;
-    font-size: calc((100vw - 384px) * 0.31);
+    color: var(--wordmark);
+    font-size: calc((100vw - 384px) * 0.2);
     font-weight: 700;
-    line-height: 0.75;
+    line-height: 0.9;
     letter-spacing: -0.06em;
   }
 
   .footer-wordmark span {
     color: var(--accent);
+  }
+
+  .footer-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    padding-bottom: 32px;
+  }
+
+  .footer-top-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding-block: 4px;
+    color: var(--surface);
+    font-size: 14px;
+    transition: color 200ms ease;
+  }
+
+  .footer-top-link:hover {
+    color: var(--accent);
+  }
+
+  .footer-top-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  .footer-copyright {
+    opacity: 0.6;
+    font-size: 12px;
   }
 </style>
