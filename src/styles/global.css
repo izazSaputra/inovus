@@ -87,6 +87,8 @@ body {
 }
 
 hr {
+  position: relative;
+  overflow: visible;
   border: none;
   height: 1px;
   margin: 0 -7.8125vw;
@@ -97,6 +99,26 @@ hr {
     transparent 20px,
     transparent 32px
   );
+}
+
+hr::before,
+hr::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  width: 13px;
+  height: 13px;
+  background:
+    linear-gradient(var(--text), var(--text)) center / 100% 1px no-repeat,
+    linear-gradient(var(--text), var(--text)) center / 1px 100% no-repeat;
+}
+
+hr::before {
+  left: calc(7.8125vw - 6px);
+}
+
+hr::after {
+  right: calc(7.8125vw - 6px);
 }
 
 .container {
