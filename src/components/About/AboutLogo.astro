@@ -5,26 +5,31 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
 import siluetI from "../../assets/logo/siluet_i.svg";
 import siluetU from "../../assets/logo/siluet_u.svg";
 import siluetB from "../../assets/logo/siluet_b.svg";
+import { number } from "astro:schema";
 
 const logoMeanings = [
   {
+    number: "01",
     logo: logoInovus,
     title: "Pilar",
     description: "Menggambarkan kekuatan, kreativitas, dan kebersamaan.",
   },
   {
+    number: "02",
     logo: siluetI,
     title: "Siluet huruf i",
     description:
       "Huruf awal dari kata “innovative”, sekaligus siluet seseorang yang berdampak positif.",
   },
   {
+    number: "03",
     logo: siluetU,
     title: "Siluet huruf u",
     description:
       "Berasal dari kata “us” yang berarti “kami”. Kami adalah keluarga.",
   },
   {
+    number: "04",
     logo: siluetB,
     title: "Siluet huruf B",
     description:
@@ -34,29 +39,40 @@ const logoMeanings = [
 ---
 
 <section class="about-logo" aria-labelledby="about-logo-title">
-  <div class="about-logo-heading">
-    <p class="about-logo-label">02 / LOGO</p>
-    <h2 id="about-logo-title">
-      Satu bentuk.
-      <span>Empat makna.</span>
-    </h2>
-  </div>
+  <p class="about-logo-label">02 / LOGO</p>
+  <h2 id="about-logo-title">
+    Satu bentuk.
+    <span>Empat makna.</span>
+  </h2>
 
-  <ul class="about-logo-list">
-    {
-      logoMeanings.map((meaning) => (
-        <li class="about-logo-item">
-          <div class="about-logo-mark">
-            <Image src={meaning.logo} alt="" class="about-logo-image" />
-          </div>
-          <div class="about-logo-text">
-            <h3>{meaning.title}</h3>
-            <p>{meaning.description}</p>
-          </div>
-        </li>
-      ))
-    }
-  </ul>
+  <div class="about-logo-body">
+    <figure class="about-logo-feature">
+      <span class="about-logo-tag about-logo-tag-top">LOGOMARK</span>
+      <Image
+        src={logoInovus}
+        alt="Logo Inovus: tiga pilar biru dengan satu titik oranye di atas pilar tengah"
+        class="about-logo-feature-image"
+      />
+      <span class="about-logo-tag about-logo-tag-bottom">PTI-B 2025</span>
+    </figure>
+
+    <ul class="about-logo-list">
+      {
+        logoMeanings.map((meaning) => (
+          <li class="about-logo-item">
+            <div class="about-logo-mark">
+              <Image src={meaning.logo} alt="" class="about-logo-image" />
+            </div>
+            <div class="about-logo-text">
+              <span>{meaning.number}</span>
+              <h3>{meaning.title}</h3>
+              <p>{meaning.description}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
 </section>
 
 <style>
@@ -87,27 +103,78 @@ const logoMeanings = [
     letter-spacing: 0;
   }
 
-  .about-logo-list {
+  .about-logo-body {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 48px 64px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: center;
+    gap: 64px;
     margin-top: 64px;
+  }
+
+  .about-logo-feature {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background-color: var(--surface);
+  }
+
+  .about-logo-feature-image {
+    width: 40%;
+    height: auto;
+  }
+
+  .about-logo-tag {
+    position: absolute;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
+
+  .about-logo-tag-top {
+    top: 24px;
+    left: 24px;
+  }
+
+  .about-logo-tag-bottom {
+    right: 24px;
+    bottom: 24px;
+  }
+
+  .about-logo-list {
     list-style: none;
   }
 
   .about-logo-item {
     display: grid;
-    grid-template-columns: 96px 1fr;
+    grid-template-columns: 64px 1fr;
     align-items: start;
     gap: 24px;
+    padding: 28px 0;
+  }
+
+  .about-logo-item + .about-logo-item {
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--frame) 0px,
+      var(--frame) 20px,
+      transparent 20px,
+      transparent 32px
+    );
+    background-position: left top;
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
   }
 
   .about-logo-mark {
-    width: 96px;
-    height: 96px;
-    padding: 16px;
+    width: 64px;
+    height: 64px;
+    padding: 12px;
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 10px;
     background-color: var(--surface);
   }
 
@@ -121,7 +188,14 @@ const logoMeanings = [
   .about-logo-text {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
+  }
+
+  .about-logo-text span {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
   }
 
   .about-logo-text h3 {
@@ -131,7 +205,7 @@ const logoMeanings = [
   }
 
   .about-logo-text p {
-    max-width: 340px;
+    max-width: 400px;
     color: var(--text-muted);
     font-size: 14px;
     line-height: 1.6;
