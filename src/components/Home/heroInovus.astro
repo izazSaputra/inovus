@@ -9,25 +9,28 @@ import homePreview from "../../assets/indexPreview/previewIndex.jpg";
     PTI-B <span aria-hidden="true">/</span> ANGKATAN 2025
   </p>
 
-  <h1 id="hero-title">
-    Beda kepala.
-    <span>Satu cerita.</span>
-  </h1>
+  <div class="hero-main">
+    <h1 id="hero-title">
+      Beda kepala.
+      <span>Satu cerita.</span>
+    </h1>
 
-  <p class="hero-description">
-    Tempat cerita, tawa, dan langkah kecil kita.
-    <br />
-    Dari PTI-B, Universitas Negeri Malang.
-  </p>
+    <div class="hero-side">
+      <p class="hero-description">
+        Tempat cerita, tawa, dan langkah kecil kita.
+        <br />
+        Dari PTI-B, Universitas Negeri Malang.
+      </p>
+      <div class="hero-action">
+        <a class="button-primary" href="/about">
+          Kenalan sama kita <span aria-hidden="true">↗</span>
+        </a>
 
-  <div class="hero-action">
-    <a class="button-primary" href="/about">
-      Kenalan sama kita <span aria-hidden="true">↗</span>
-    </a>
-
-    <a class="button-secondary" href="/gallery">
-      Lihat galeri <span aria-hidden="true">↗</span>
-    </a>
+        <a class="button-secondary" href="/gallery">
+          Lihat galeri <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
   </div>
 
   <div class="hero-photo">
@@ -44,15 +47,13 @@ import homePreview from "../../assets/indexPreview/previewIndex.jpg";
 <style>
   .hero {
     padding: 160px 32px 80px;
-    text-align: center;
   }
 
   .hero-label {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 16px;
-    font-size: 0.75rem;
+    font-size: 12px;
     font-weight: 500;
     letter-spacing: 2px;
   }
@@ -61,8 +62,15 @@ import homePreview from "../../assets/indexPreview/previewIndex.jpg";
     color: var(--accent);
   }
 
+  .hero-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    align-items: end;
+    gap: 64px;
+    margin-top: 32px;
+  }
+
   h1 {
-    margin-top: 3.5rem;
     font-size: var(--text-display);
     font-weight: 500;
     line-height: 1;
@@ -79,18 +87,16 @@ import homePreview from "../../assets/indexPreview/previewIndex.jpg";
   }
 
   .hero-description {
-    margin-top: 15px;
     color: var(--text-muted);
     font-size: 16px;
-    line-height: 1.4;
+    line-height: 1.6;
   }
 
   .hero-action {
     display: flex;
-    justify-content: center;
     align-items: center;
     gap: 24px;
-    margin-top: 32px;
+    margin-top: 24px;
   }
 
   .hero-action a {
@@ -116,6 +122,10 @@ import homePreview from "../../assets/indexPreview/previewIndex.jpg";
     background-color: var(--accent);
   }
 
+  .button-secondary {
+    transition: color 250ms ease;
+  }
+
   .button-secondary:hover {
     color: var(--accent);
   }
@@ -127,10 +137,9 @@ import homePreview from "../../assets/indexPreview/previewIndex.jpg";
 
   .hero-photo {
     position: relative;
-    height: 400px;
-    margin-top: 64px;
+    height: 560px;
+    margin: 64px calc(-32px - 6.125vw) 0;
     overflow: hidden;
-    border: 1px solid var(--border);
     border-radius: 12px;
     background-color: var(--placeholder-color);
   }
@@ -154,19 +163,5 @@ import homePreview from "../../assets/indexPreview/previewIndex.jpg";
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 2px;
-  }
-
-  .photo-content p {
-    color: var(--primary);
-    font-family: var(--font-display);
-    font-size: 48px;
-    font-weight: 700;
-  }
-
-  .photo-content span {
-    display: block;
-    margin-top: 12px;
-    color: var(--text-muted);
-    font-size: 13px;
   }
 </style>
