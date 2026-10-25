@@ -1,0 +1,66 @@
+<section class="member-hero" aria-labelledby="member-hero-title">
+  <p class="member-hero-label">
+    PTI-B <span aria-hidden="true">/</span> ANGKATAN 2025
+  </p>
+
+  <div class="member-hero-main">
+    <h1 id="member-hero-title">
+      Wajah-wajah
+      <span>Inovus.</span>
+    </h1>
+
+    <p class="member-hero-description">
+      Satu kelas, banyak kepala. Kenalan sama pengurus dan teman-teman PTI-B
+      angkatan 2025, satu per satu.
+    </p>
+  </div>
+</section>
+
+<style>
+  .member-hero {
+    padding: 160px 32px 80px;
+  }
+
+  .member-hero-label {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
+
+  .member-hero-label span {
+    color: var(--accent);
+  }
+
+  .member-hero-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    align-items: end;
+    gap: 64px;
+    margin-top: 32px;
+  }
+
+  h1 {
+    font-size: var(--text-display);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -4px;
+  }
+
+  h1 span {
+    display: block;
+    color: var(--primary);
+    font-family: var(--font-display);
+    font-size: 1.15em;
+    font-weight: 700;
+    letter-spacing: -2px;
+  }
+
+  .member-hero-description {
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+</style>

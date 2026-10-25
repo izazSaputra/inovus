@@ -1,0 +1,103 @@
+<section class="member-cta" aria-labelledby="member-cta-title">
+  <p class="member-cta-label">02 / SELANJUTNYA</p>
+  <h2 id="member-cta-title">
+    Udah kenalan?
+    <span>Lihat momen kita.</span>
+  </h2>
+  <p class="member-cta-description">
+    Dari ruang kelas sampai di luar kelas, ini cerita-cerita yang kami simpan
+    bersama.
+  </p>
+
+  <div class="cta-action">
+    <a class="button-primary" href="/gallery">
+      Lihat galeri <span aria-hidden="true">↗</span>
+    </a>
+
+    <a class="button-secondary" href="/about">
+      Cerita kami <span aria-hidden="true">↗</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .member-cta {
+    padding: 90px 32px;
+    text-align: center;
+  }
+
+  .member-cta-label {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
+
+  .member-cta h2 {
+    margin-top: 32px;
+    font-size: var(--text-heading);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -2px;
+  }
+
+  .member-cta h2 span {
+    display: block;
+    color: var(--primary);
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+
+  .member-cta-description {
+    max-width: 500px;
+    margin: 40px auto 0;
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .cta-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 36px;
+    margin-top: 32px;
+  }
+
+  .cta-action a {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .button-primary {
+    background-color: var(--primary);
+    color: var(--surface);
+    transition:
+      background-color 250ms ease,
+      color 250ms ease;
+  }
+
+  .button-primary:hover {
+    color: var(--text);
+    background-color: var(--accent);
+  }
+
+  .button-secondary {
+    transition: color 250ms ease;
+  }
+
+  .button-secondary:hover {
+    color: var(--accent);
+  }
+
+  .cta-action a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+</style>

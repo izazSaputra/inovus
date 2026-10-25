@@ -1,0 +1,260 @@
+---
+import { Image } from "astro:assets";
+
+import { members, formatBirthDate } from "../../data/members";
+import logoInovus from "../../assets/logo/logo_inovus.svg";
+---
+
+<section class="members" aria-labelledby="members-title">
+  <p class="members-label">01 / ANGGOTA</p>
+  <h2 id="members-title">
+    Satu kelas,
+    <span>banyak kepala.</span>
+  </h2>
+
+  <ul class="members-grid">
+    {
+      members.map((member) => (
+        <li class="member">
+          <div class="member-card">
+            {member.photo ? (
+              <Image
+                src={member.photo}
+                alt={`Foto ${member.name}`}
+                class="member-image"
+                width={1380}
+                loading="lazy"
+              />
+            ) : (
+              <span class="member-pending">Foto menyusul</span>
+            )}
+
+            <span class="member-number" aria-hidden="true">
+              {String(member.number).padStart(2, "0")}
+            </span>
+
+            {member.role && (
+              <span class="member-badge">
+                <Image src={logoInovus} alt="" height={20} />
+              </span>
+            )}
+
+            <div class="member-info">
+              {member.role && <p class="member-role">{member.role}</p>}
+              <h3>{member.nickname}</h3>
+            </div>
+          </div>
+
+          <div class="member-details">
+            <p class="member-name">{member.name}</p>
+            {member.birthDate && (
+              <p class="member-meta">{formatBirthDate(member.birthDate)}</p>
+            )}
+            {member.instagram && (
+              <a
+                class="member-instagram"
+                href={`https://www.instagram.com/${member.instagram}/`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Instagram @${member.instagram}`}
+              >
+                @{member.instagram} <span aria-hidden="true">↗</span>
+              </a>
+            )}
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .members {
+    padding: 64px 32px 80px;
+  }
+
+  .members-label {
+    margin-bottom: 24px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
+
+  h2 {
+    font-size: var(--text-heading);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -2px;
+  }
+
+  h2 span {
+    display: block;
+    color: var(--primary);
+    font-family: var(--font-display-solid);
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .members-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 48px 24px;
+    margin-top: 48px;
+    list-style: none;
+  }
+
+  .member-card {
+    position: relative;
+    isolation: isolate;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 12px;
+    background-color: var(--primary);
+    transition: background-color 400ms ease;
+  }
+
+  .member-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(
+      to top,
+      oklch(15% 0.1 264 / 0.7),
+      transparent 45%
+    );
+    pointer-events: none;
+  }
+
+  .member-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) brightness(1.4) contrast(1.1);
+    mix-blend-mode: multiply;
+    transform: scale(2.3);
+    transform-origin: center 16%;
+    transition: filter 400ms ease;
+  }
+
+  .member-card:hover {
+    background-color: var(--surface);
+  }
+
+  .member-card:hover .member-image {
+    filter: grayscale(0) brightness(1) contrast(1);
+  }
+
+  .member-number {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 1;
+    color: var(--surface);
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .member-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--surface);
+  }
+
+  .member-badge img {
+    display: block;
+    width: auto;
+    height: 20px;
+  }
+
+  .member-info {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1;
+    color: var(--surface);
+  }
+
+  .member-role {
+    margin-bottom: 6px;
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .member-info h3 {
+    font-family: var(--font-display-solid);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .member-pending {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--surface);
+    opacity: 0.6;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  .member-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-top: 16px;
+  }
+
+  .member-name {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .member-meta {
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  .member-instagram {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding-block: 2px;
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 500;
+    transition: color 200ms ease;
+  }
+
+  .member-instagram:hover {
+    color: var(--accent);
+  }
+
+  .member-instagram:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .member-card,
+    .member-image {
+      transition: none;
+    }
+  }
+</style>
