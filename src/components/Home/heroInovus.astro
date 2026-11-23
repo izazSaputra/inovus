@@ -8,25 +8,50 @@ const pad = (number: number) => String(number).padStart(2, "0");
 
 <section class="hero" aria-labelledby="hero-title">
   <script is:inline>
-    // Absen pembuka: wajah muncul satu per satu, sekali per kunjungan.
+    // Absen pembuka: wajah muncul satu per satu.
     // Ditulis langsung di sini supaya kelasnya terpasang sebelum wajah tampil.
     // Animasinya hanya perubahan warna, jadi tetap diputar walau "reduce motion"
     // aktif; yang dihilangkan hanya gerakan geser di judul (lihat CSS).
+    //
+    // Diputar ulang saat:
+    // - halaman dibuka atau di-refresh,
+    // - kembali ke Home lewat tombol Back (halaman dipulihkan dari cache),
+    // - dinding wajah masuk lagi ke layar setelah sempat keluar sepenuhnya.
     (() => {
       const hero = document.currentScript.parentElement;
-      let played = false;
 
-      try {
-        played = sessionStorage.getItem("inovus-roll-call") === "1";
-        sessionStorage.setItem("inovus-roll-call", "1");
-      } catch {}
-
-      if (played) return;
+      const play = () => {
+        hero.classList.remove("is-roll-call", "is-waiting");
+        // Paksa browser menghitung ulang gaya supaya animasi mulai dari awal.
+        void hero.offsetWidth;
+        hero.classList.add("is-roll-call");
+      };
 
       hero.classList.add("is-roll-call", "is-waiting");
       const start = () => hero.classList.remove("is-waiting");
       window.addEventListener("load", start, { once: true });
       setTimeout(start, 2500);
+
+      window.addEventListener("pageshow", (event) => {
+        if (event.persisted) play();
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const wall = hero.querySelector(".hero-wall");
+        let hasLeft = false;
+
+        new IntersectionObserver(
+          ([entry]) => {
+            if (!entry.isIntersecting) {
+              hasLeft = true;
+            } else if (hasLeft && entry.intersectionRatio >= 0.35) {
+              hasLeft = false;
+              play();
+            }
+          },
+          { threshold: [0, 0.35] },
+        ).observe(wall);
+      });
     })();
   </script>
 
