@@ -1,0 +1,87 @@
+---
+import { moments } from "../../data/moments";
+
+const photoCount = moments.reduce((total, moment) => total + moment.photos.length, 0);
+---
+
+<section class="gallery-hero" aria-labelledby="gallery-hero-title">
+  <p class="gallery-hero-label">
+    PTI-B <span aria-hidden="true">/</span> ANGKATAN 2025
+  </p>
+
+  <div class="gallery-hero-main">
+    <h1 id="gallery-hero-title">
+      Album
+      <span>Inovus.</span>
+    </h1>
+
+    <div class="gallery-hero-side">
+      <p class="gallery-hero-description">
+        Foto dari kelas, kegiatan, dan hal-hal kecil yang pengin kita ingat,
+        diurutkan dari yang paling lama.
+      </p>
+      {
+        moments.length > 0 && (
+          <p class="gallery-hero-count">
+            {moments.length} momen, {photoCount} foto
+          </p>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .gallery-hero {
+    padding: 160px 32px 80px;
+  }
+
+  .gallery-hero-label {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
+
+  .gallery-hero-label span {
+    color: var(--accent);
+  }
+
+  .gallery-hero-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    align-items: end;
+    gap: 64px;
+    margin-top: 32px;
+  }
+
+  h1 {
+    font-size: var(--text-display);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -4px;
+  }
+
+  h1 span {
+    display: block;
+    color: var(--primary);
+    font-family: var(--font-display);
+    font-size: 1.15em;
+    font-weight: 700;
+    letter-spacing: -2px;
+  }
+
+  .gallery-hero-description {
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .gallery-hero-count {
+    margin-top: 16px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+</style>

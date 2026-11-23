@@ -1,0 +1,194 @@
+---
+import { Image } from "astro:assets";
+
+import { moments, formatMomentDate } from "../../data/moments";
+
+const isSample = moments.length === 0;
+
+// Contoh tata letak selama belum ada momen asli.
+const samples = [
+  { photoCount: 6 },
+  { photoCount: 5 },
+];
+---
+
+<section class="moments" aria-label="Momen">
+  {
+    isSample && (
+      <p class="moments-notice">
+        Contoh tata letak. Foto dan nama momen menyusul.
+      </p>
+    )
+  }
+
+  <ol class="moments-list">
+    {
+      isSample
+        ? samples.map((sample) => (
+            <li class="moment">
+              <div class="moment-info">
+                <p class="moment-date">Tanggal menyusul</p>
+                <h2>Nama momen</h2>
+                <p class="moment-description">
+                  Satu atau dua kalimat tentang apa yang terjadi di momen ini.
+                </p>
+              </div>
+
+              <div class="moment-photos">
+                {Array.from({ length: sample.photoCount }, () => (
+                  <div class="moment-photo moment-photo-pending">
+                    Foto menyusul
+                  </div>
+                ))}
+              </div>
+            </li>
+          ))
+        : moments.map((moment) => (
+            <li class="moment">
+              <div class="moment-info">
+                {moment.date && (
+                  <p class="moment-date">{formatMomentDate(moment.date)}</p>
+                )}
+                <h2>{moment.title}</h2>
+                {moment.description && (
+                  <p class="moment-description">{moment.description}</p>
+                )}
+                <p class="moment-count">{moment.photos.length} foto</p>
+              </div>
+
+              <div class="moment-photos">
+                {moment.photos.map((photo) => (
+                  <div class="moment-photo">
+                    <Image
+                      src={photo.src}
+                      alt={photo.alt}
+                      width={1200}
+                      loading="lazy"
+                    />
+                  </div>
+                ))}
+              </div>
+            </li>
+          ))
+    }
+  </ol>
+</section>
+
+<style>
+  .moments {
+    padding: 64px 32px 80px;
+  }
+
+  .moments-notice {
+    margin-bottom: 48px;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .moments-list {
+    list-style: none;
+  }
+
+  .moment {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    align-items: start;
+    gap: 64px;
+    padding: 48px 0;
+  }
+
+  .moment:first-child {
+    padding-top: 0;
+  }
+
+  .moment + .moment {
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--frame) 0px,
+      var(--frame) 20px,
+      transparent 20px,
+      transparent 32px
+    );
+    background-position: left top;
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+  }
+
+  .moment-info {
+    position: sticky;
+    top: 112px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .moment-date {
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  h2 {
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -1px;
+  }
+
+  .moment-description {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .moment-count {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .moment-photos {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: 160px;
+    grid-auto-flow: dense;
+    gap: 12px;
+  }
+
+  .moment-photo {
+    overflow: hidden;
+    border-radius: var(--radius-pillar-small);
+    background-color: var(--placeholder-color);
+  }
+
+  .moment-photo:nth-child(6n + 1) {
+    grid-column: span 2;
+    grid-row: span 2;
+    border-radius: var(--radius-pillar);
+  }
+
+  /* Pola tiap 6 foto: 1 besar, 2 kecil, lalu 3 lebar, supaya baris selalu penuh. */
+  .moment-photo:nth-child(6n + 4),
+  .moment-photo:nth-child(6n + 5),
+  .moment-photo:nth-child(6n) {
+    grid-column: span 2;
+  }
+
+  .moment-photo:nth-child(6n + 5):last-child {
+    grid-column: span 4;
+  }
+
+  .moment-photo :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .moment-photo-pending {
+    display: grid;
+    place-items: center;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+</style>

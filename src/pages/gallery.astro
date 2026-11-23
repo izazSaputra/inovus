@@ -1,0 +1,21 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Global/Navbar.astro";
+import Footer from "../components/Global/Footer.astro";
+import GalleryHero from "../components/Gallery/GalleryHero.astro";
+import GalleryMoments from "../components/Gallery/GalleryMoments.astro";
+import GalleryCta from "../components/Gallery/GalleryCta.astro";
+---
+
+<Layout pageTitle="Album Inovus">
+  <Navbar />
+  <div class="container">
+    <GalleryHero />
+    <hr />
+    <GalleryMoments />
+    <hr />
+    <GalleryCta />
+    <hr />
+    <Footer />
+  </div>
+</Layout>

@@ -1,0 +1,100 @@
+<section class="gallery-cta" aria-labelledby="gallery-cta-title">
+  <p class="gallery-cta-label">Kirim foto</p>
+  <h2 id="gallery-cta-title">
+    Punya foto kelas
+    <span>yang belum masuk?</span>
+  </h2>
+  <p class="gallery-cta-description">
+    Kirim lewat DM Instagram Inovus. Nanti fotonya kami tambahkan ke album.
+  </p>
+
+  <div class="cta-action">
+    <a
+      class="button-primary"
+      href="https://www.instagram.com/inovus.ofc/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      DM @inovus.ofc <span aria-hidden="true">↗</span>
+    </a>
+
+    <a class="button-secondary" href="/member">Kenalan sama kita</a>
+  </div>
+</section>
+
+<style>
+  .gallery-cta {
+    padding: 90px 32px;
+    text-align: center;
+  }
+
+  .gallery-cta-label {
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .gallery-cta h2 {
+    margin-top: 32px;
+    font-size: var(--text-heading);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -2px;
+  }
+
+  .gallery-cta h2 span {
+    display: block;
+  }
+
+  .gallery-cta-description {
+    max-width: 500px;
+    margin: 40px auto 0;
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .cta-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 36px;
+    margin-top: 32px;
+  }
+
+  .cta-action a {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .button-primary {
+    background-color: var(--primary);
+    color: var(--surface);
+    transition:
+      background-color 250ms ease,
+      color 250ms ease;
+  }
+
+  .button-primary:hover {
+    color: var(--text);
+    background-color: var(--accent);
+  }
+
+  .button-secondary {
+    transition: color 250ms ease;
+  }
+
+  .button-secondary:hover {
+    color: var(--accent);
+  }
+
+  .cta-action a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+</style>
