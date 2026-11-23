@@ -7,6 +7,29 @@ const pad = (number: number) => String(number).padStart(2, "0");
 ---
 
 <section class="hero" aria-labelledby="hero-title">
+  <script is:inline>
+    // Absen pembuka: wajah muncul satu per satu, sekali per kunjungan.
+    // Ditulis langsung di sini supaya kelasnya terpasang sebelum wajah tampil.
+    // Animasinya hanya perubahan warna, jadi tetap diputar walau "reduce motion"
+    // aktif; yang dihilangkan hanya gerakan geser di judul (lihat CSS).
+    (() => {
+      const hero = document.currentScript.parentElement;
+      let played = false;
+
+      try {
+        played = sessionStorage.getItem("inovus-roll-call") === "1";
+        sessionStorage.setItem("inovus-roll-call", "1");
+      } catch {}
+
+      if (played) return;
+
+      hero.classList.add("is-roll-call", "is-waiting");
+      const start = () => hero.classList.remove("is-waiting");
+      window.addEventListener("load", start, { once: true });
+      setTimeout(start, 2500);
+    })();
+  </script>
+
   <p class="hero-label">
     PTI-B <span aria-hidden="true">/</span> ANGKATAN 2025
   </p>
@@ -18,9 +41,10 @@ const pad = (number: number) => String(number).padStart(2, "0");
     </h1>
 
     {
-      members.map((member) => (
+      members.map((member, index) => (
         <a
-          class="hero-face"
+          class:list={["hero-face", { "hero-face-empty": !member.photo }]}
+          style={`--i: ${index}`}
           href={`/member#absen-${pad(member.number)}`}
           aria-label={`${member.nickname}, nomor absen ${member.number}`}
         >
@@ -225,7 +249,113 @@ const pad = (number: number) => String(number).padStart(2, "0");
     outline-offset: 4px;
   }
 
+  .is-roll-call .hero-motto {
+    animation: motto-in 700ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  }
+
+  .is-roll-call .hero-face {
+    animation: roll-call-tile 1100ms ease backwards;
+    animation-delay: calc(500ms + var(--i) * 35ms);
+  }
+
+  .is-roll-call .hero-face-image,
+  .is-roll-call .hero-face-pending,
+  .is-roll-call .hero-face-number {
+    animation: roll-call-face 1100ms ease backwards;
+    animation-delay: calc(500ms + var(--i) * 35ms);
+  }
+
+  .is-roll-call .hero-face-empty {
+    animation-name: none;
+  }
+
+  .is-roll-call .hero-face-pending {
+    animation-name: roll-call-pending;
+  }
+
+  .is-roll-call .hero-face-number {
+    animation-name: roll-call-number;
+  }
+
+  .is-waiting .hero-motto,
+  .is-waiting .hero-face,
+  .is-waiting .hero-face-image,
+  .is-waiting .hero-face-pending,
+  .is-waiting .hero-face-number {
+    animation-play-state: paused;
+  }
+
+  @keyframes motto-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+
+  @keyframes motto-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes roll-call-tile {
+    0% {
+      background-color: var(--primary);
+    }
+    25%,
+    50% {
+      background-color: var(--surface);
+    }
+    100% {
+      background-color: var(--primary);
+    }
+  }
+
+  @keyframes roll-call-face {
+    0% {
+      opacity: 0;
+      filter: grayscale(0) brightness(1) contrast(1);
+    }
+    25%,
+    50% {
+      opacity: 1;
+      filter: grayscale(0) brightness(1) contrast(1);
+    }
+    100% {
+      opacity: 1;
+      filter: grayscale(1) brightness(1.4) contrast(1.1);
+    }
+  }
+
+  @keyframes roll-call-pending {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes roll-call-number {
+    0% {
+      opacity: 0;
+    }
+    25%,
+    50% {
+      opacity: 1;
+      color: var(--primary);
+    }
+    100% {
+      opacity: 1;
+      color: var(--surface);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
+    .is-roll-call .hero-motto {
+      animation-name: motto-fade;
+    }
+
     .hero-face,
     .hero-face-image,
     .hero-face-number {
