@@ -1,7 +1,9 @@
 ---
 import { Image } from "astro:assets";
 
-import homePreview from "../../assets/indexPreview/previewIndex.jpg";
+import { members } from "../../data/members";
+
+const pad = (number: number) => String(number).padStart(2, "0");
 ---
 
 <section class="hero" aria-labelledby="hero-title">
@@ -9,44 +11,56 @@ import homePreview from "../../assets/indexPreview/previewIndex.jpg";
     PTI-B <span aria-hidden="true">/</span> ANGKATAN 2025
   </p>
 
-  <div class="hero-main">
-    <h1 id="hero-title">
+  <div class="hero-wall">
+    <h1 id="hero-title" class="hero-motto">
       Beda kepala.
       <span>Satu cerita.</span>
     </h1>
 
-    <div class="hero-side">
-      <p class="hero-description">
-        Tempat cerita, tawa, dan langkah kecil kita.
-        <br />
-        Dari PTI-B, Universitas Negeri Malang.
-      </p>
-      <div class="hero-action">
-        <a class="button-primary" href="/about">
-          Kenalan sama kita <span aria-hidden="true">↗</span>
+    {
+      members.map((member) => (
+        <a
+          class="hero-face"
+          href={`/member#absen-${pad(member.number)}`}
+          aria-label={`${member.nickname}, nomor absen ${member.number}`}
+        >
+          {member.photo ? (
+            <Image
+              src={member.photo.face}
+              alt=""
+              width={240}
+              class="hero-face-image"
+              loading="eager"
+            />
+          ) : (
+            <span class="hero-face-pending" aria-hidden="true">
+              {member.nickname}
+            </span>
+          )}
+          <span class="hero-face-number" aria-hidden="true">
+            {pad(member.number)}
+          </span>
         </a>
-
-        <a class="button-secondary" href="/gallery">
-          Lihat galeri <span aria-hidden="true">↗</span>
-        </a>
-      </div>
-    </div>
+      ))
+    }
   </div>
 
-  <div class="hero-photo">
-    <Image
-      src={homePreview}
-      alt="Foto bersama kelas PTI-B angkatan 2025 Universitas Negeri Malang"
-      class="hero-image"
-      width={2240}
-    />
-    <span class="photo-label">INOVUS / PTI-B 2025</span>
+  <div class="hero-footer">
+    <p class="hero-description">
+      Tempat cerita, tawa, dan langkah kecil kita. {members.length} orang dari
+      PTI-B, Universitas Negeri Malang.
+    </p>
+
+    <div class="hero-action">
+      <a class="button-primary" href="/member">Kenalan sama kita</a>
+      <a class="button-secondary" href="/about">Cerita kami</a>
+    </div>
   </div>
 </section>
 
 <style>
   .hero {
-    padding: 160px 32px 80px;
+    padding: 128px 32px 80px;
   }
 
   .hero-label {
@@ -62,22 +76,25 @@ import homePreview from "../../assets/indexPreview/previewIndex.jpg";
     color: var(--accent);
   }
 
-  .hero-main {
+  .hero-wall {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 360px;
-    align-items: end;
-    gap: 64px;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 8px;
     margin-top: 32px;
   }
 
-  h1 {
-    font-size: var(--text-display);
+  .hero-motto {
+    grid-column: 3 / span 5;
+    grid-row: 2 / span 2;
+    align-self: center;
+    padding: 0 24px;
+    font-size: 72px;
     font-weight: 500;
     line-height: 1;
-    letter-spacing: -4px;
+    letter-spacing: -3px;
   }
 
-  h1 span {
+  .hero-motto span {
     display: block;
     color: var(--primary);
     font-family: var(--font-display);
@@ -86,7 +103,82 @@ import homePreview from "../../assets/indexPreview/previewIndex.jpg";
     letter-spacing: -2px;
   }
 
+  .hero-face {
+    position: relative;
+    isolation: isolate;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--radius-pillar-small);
+    background-color: var(--primary);
+    transition: background-color 400ms ease;
+  }
+
+  .hero-face-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) brightness(1.4) contrast(1.1);
+    mix-blend-mode: multiply;
+    transition: filter 400ms ease;
+  }
+
+  .hero-face:hover,
+  .hero-face:focus-visible {
+    background-color: var(--surface);
+  }
+
+  .hero-face:hover .hero-face-image,
+  .hero-face:focus-visible .hero-face-image {
+    filter: grayscale(0) brightness(1) contrast(1);
+  }
+
+  .hero-face:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .hero-face-number {
+    position: absolute;
+    bottom: 6px;
+    left: 8px;
+    z-index: 1;
+    color: var(--surface);
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    transition: color 400ms ease;
+  }
+
+  .hero-face:hover .hero-face-number,
+  .hero-face:focus-visible .hero-face-number {
+    color: var(--primary);
+  }
+
+  .hero-face-pending {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--surface);
+    opacity: 0.7;
+    font-size: 12px;
+  }
+
+  .hero-face:hover .hero-face-pending {
+    color: var(--primary);
+  }
+
+  .hero-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 48px;
+    margin-top: 40px;
+  }
+
   .hero-description {
+    max-width: 440px;
     color: var(--text-muted);
     font-size: 16px;
     line-height: 1.6;
@@ -96,13 +188,11 @@ import homePreview from "../../assets/indexPreview/previewIndex.jpg";
     display: flex;
     align-items: center;
     gap: 24px;
-    margin-top: 24px;
   }
 
   .hero-action a {
     display: inline-flex;
     align-items: center;
-    gap: 16px;
     padding: 14px 20px;
     border-radius: 8px;
     font-size: 14px;
@@ -135,33 +225,11 @@ import homePreview from "../../assets/indexPreview/previewIndex.jpg";
     outline-offset: 4px;
   }
 
-  .hero-photo {
-    position: relative;
-    height: 560px;
-    margin: 64px calc(-32px - 6.125vw) 0;
-    overflow: hidden;
-    border-radius: 12px;
-    background-color: var(--placeholder-color);
-  }
-
-  .hero-image {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 33.5%;
-  }
-
-  .photo-label {
-    position: absolute;
-    bottom: 24px;
-    left: 24px;
-    padding: 8px 12px;
-    border-radius: 6px;
-    background-color: var(--background);
-    color: var(--text);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 2px;
+  @media (prefers-reduced-motion: reduce) {
+    .hero-face,
+    .hero-face-image,
+    .hero-face-number {
+      transition: none;
+    }
   }
 </style>

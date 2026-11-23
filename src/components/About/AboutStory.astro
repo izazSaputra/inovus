@@ -1,18 +1,15 @@
 ---
 const values = [
   {
-    number: "01",
     title: "Ketawa bareng",
     description:
       "Suasana kelas yang bikin capeknya kuliah terasa lebih ringan.",
   },
   {
-    number: "02",
     title: "Saling bantu",
     description: "Kalau ada yang kesulitan, yang lain ikut turun tangan.",
   },
   {
-    number: "03",
     title: "Peduli",
     description:
       "Saling jaga dan saling perhatian, di dalam maupun di luar kelas.",
@@ -23,7 +20,7 @@ const values = [
 <section class="about-story" aria-labelledby="about-story-title">
   <div class="about-story-intro">
     <div>
-      <p class="about-story-label">01 / CERITA</p>
+      <p class="about-story-label">Cerita</p>
       <h2 id="about-story-title">
         Inovatif
         <span>+ us.</span>
@@ -46,7 +43,6 @@ const values = [
     {
       values.map((value) => (
         <li class="about-story-value">
-          <span>{value.number}</span>
           <h3>{value.title}</h3>
           <p>{value.description}</p>
         </li>
@@ -68,11 +64,10 @@ const values = [
   }
 
   .about-story-label {
-    font-size: 12px;
-    font-weight: 500;
+    margin-bottom: 16px;
     color: var(--text-muted);
-    margin-bottom: 24px;
-    letter-spacing: 2px;
+    font-size: 14px;
+    font-weight: 500;
   }
 
   .about-story h2 {
@@ -139,13 +134,6 @@ const values = [
     background-position: left top;
     background-size: 1px 100%;
     background-repeat: no-repeat;
-  }
-
-  .about-story-value span {
-    color: var(--accent);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 2px;
   }
 
   .about-story-value h3 {

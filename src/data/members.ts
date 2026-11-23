@@ -1,23 +1,38 @@
 import type { ImageMetadata } from "astro";
 
-const photos = import.meta.glob<{ default: ImageMetadata }>(
-  "../assets/members/*.jpg",
+// Foto sudah dipotong oleh scripts/crop-members.mjs (npm run crop:members).
+const faces = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/members/faces/*.jpg",
   { eager: true },
 );
 
-const photo = (file: string) =>
-  photos[`../assets/members/${file}.jpg`]?.default;
+const portraits = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/members/portraits/*.jpg",
+  { eager: true },
+);
+
+export interface MemberPhoto {
+  /** Persegi, kepala dan bahu. */
+  face: ImageMetadata;
+  /** 4:5, setengah badan. */
+  portrait: ImageMetadata;
+}
+
+const photo = (file: string): MemberPhoto | undefined => {
+  const face = faces[`../assets/members/faces/${file}.jpg`]?.default;
+  const portrait = portraits[`../assets/members/portraits/${file}.jpg`]?.default;
+  return face && portrait ? { face, portrait } : undefined;
+};
 
 export interface Member {
   number: number;
   nickname: string;
   name: string;
-  /** Format YYYY-MM-DD */
   birthDate?: string;
   /** Tanpa "@" */
   instagram?: string;
   role?: string;
-  photo?: ImageMetadata;
+  photo?: MemberPhoto;
 }
 
 export const members: Member[] = [

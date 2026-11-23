@@ -6,7 +6,7 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
 ---
 
 <section class="members" aria-labelledby="members-title">
-  <p class="members-label">01 / ANGGOTA</p>
+  <p class="members-label">Anggota</p>
   <h2 id="members-title">
     Satu kelas,
     <span>banyak kepala.</span>
@@ -15,14 +15,14 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
   <ul class="members-grid">
     {
       members.map((member) => (
-        <li class="member">
+        <li class="member" id={`absen-${String(member.number).padStart(2, "0")}`}>
           <div class="member-card">
             {member.photo ? (
               <Image
-                src={member.photo}
+                src={member.photo.portrait}
                 alt={`Foto ${member.name}`}
+                width={600}
                 class="member-image"
-                width={1380}
                 loading="lazy"
               />
             ) : (
@@ -74,11 +74,10 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
   }
 
   .members-label {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     color: var(--text-muted);
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
-    letter-spacing: 2px;
   }
 
   h2 {
@@ -90,10 +89,10 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
 
   h2 span {
     display: block;
-    color: var(--primary);
-    font-family: var(--font-display-solid);
-    font-weight: 700;
-    letter-spacing: 0;
+  }
+
+  .member {
+    scroll-margin-top: 112px;
   }
 
   .members-grid {
@@ -109,7 +108,7 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
     isolation: isolate;
     aspect-ratio: 4 / 5;
     overflow: hidden;
-    border-radius: 12px;
+    border-radius: var(--radius-pillar);
     background-color: var(--primary);
     transition: background-color 400ms ease;
   }
@@ -133,8 +132,6 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
     object-fit: cover;
     filter: grayscale(1) brightness(1.4) contrast(1.1);
     mix-blend-mode: multiply;
-    transform: scale(2.3);
-    transform-origin: center 16%;
     transition: filter 400ms ease;
   }
 
@@ -142,8 +139,15 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
     background-color: var(--surface);
   }
 
-  .member-card:hover .member-image {
+  .member-card:hover .member-image,
+  .member:target .member-image {
     filter: grayscale(0) brightness(1) contrast(1);
+  }
+
+  .member:target .member-card {
+    background-color: var(--surface);
+    outline: 3px solid var(--accent);
+    outline-offset: 4px;
   }
 
   .member-number {
@@ -188,10 +192,8 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
   .member-role {
     margin-bottom: 6px;
     color: var(--accent);
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
   }
 
   .member-info h3 {
