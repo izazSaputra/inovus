@@ -4,6 +4,27 @@ import { Image } from "astro:assets";
 import { members } from "../../data/members";
 
 const pad = (number: number) => String(number).padStart(2, "0");
+
+// Posisi tiap kotak di grid 10 × 5 (motto menempati kolom 3–7, baris 2–3),
+// dipakai untuk menghitung arah terbang kotak menjauhi motto saat di-scroll.
+const columns = 10;
+const rows = 5;
+const isMottoCell = (row: number, column: number) =>
+  row >= 2 && row <= 3 && column >= 3 && column <= 7;
+
+const cells: { row: number; column: number }[] = [];
+for (let row = 1; row <= rows; row++) {
+  for (let column = 1; column <= columns; column++) {
+    if (!isMottoCell(row, column)) cells.push({ row, column });
+  }
+}
+
+const mottoCenter = { row: 2.5, column: 5 };
+const scatter = (index: number) => {
+  const { row, column } = cells[index];
+  const rotate = ((index * 37) % 21) - 10;
+  return `--dx: ${column - mottoCenter.column}; --dy: ${row - mottoCenter.row}; --rot: ${rotate * 2}deg;`;
+};
 ---
 
 <section class="hero" aria-labelledby="hero-title">
@@ -13,10 +34,11 @@ const pad = (number: number) => String(number).padStart(2, "0");
     // Animasinya hanya perubahan warna, jadi tetap diputar walau "reduce motion"
     // aktif; yang dihilangkan hanya gerakan geser di judul (lihat CSS).
     //
-    // Diputar ulang saat:
-    // - halaman dibuka atau di-refresh,
+    // Diputar saat layar terbuka (event "inovus:reveal" dari PageTransition):
+    // - halaman dibuka, di-refresh, atau didatangi dari halaman lain,
     // - kembali ke Home lewat tombol Back (halaman dipulihkan dari cache),
-    // - dinding wajah masuk lagi ke layar setelah sempat keluar sepenuhnya.
+    // dan diputar ulang saat dinding wajah masuk lagi ke layar setelah sempat
+    // keluar sepenuhnya.
     (() => {
       const hero = document.currentScript.parentElement;
 
@@ -28,13 +50,19 @@ const pad = (number: number) => String(number).padStart(2, "0");
       };
 
       hero.classList.add("is-roll-call", "is-waiting");
-      const start = () => hero.classList.remove("is-waiting");
-      window.addEventListener("load", start, { once: true });
-      setTimeout(start, 2500);
+      let started = false;
+      const start = () => {
+        started = true;
+        hero.classList.remove("is-waiting");
+      };
 
-      window.addEventListener("pageshow", (event) => {
-        if (event.persisted) play();
+      document.addEventListener("inovus:reveal", () => {
+        if (started) play();
+        else start();
       });
+      setTimeout(() => {
+        if (!started) start();
+      }, 4500);
 
       document.addEventListener("DOMContentLoaded", () => {
         const wall = hero.querySelector(".hero-wall");
@@ -55,18 +83,22 @@ const pad = (number: number) => String(number).padStart(2, "0");
     })();
   </script>
 
+  <div class="hero-stage">
   <p class="hero-label">
     PTI-B <span aria-hidden="true">/</span> ANGKATAN 2025
   </p>
 
   <div class="hero-wall">
-    <h1 id="hero-title" class="hero-motto">
-      Beda kepala.
-      <span>Satu cerita.</span>
-    </h1>
+    <div class="hero-motto-cell">
+      <h1 id="hero-title" class="hero-motto">
+        Beda kepala.
+        <span>Satu cerita.</span>
+      </h1>
+    </div>
 
     {
       members.map((member, index) => (
+        <div class="hero-cell" style={scatter(index)}>
         <a
           class:list={["hero-face", { "hero-face-empty": !member.photo }]}
           style={`--i: ${index}`}
@@ -90,6 +122,7 @@ const pad = (number: number) => String(number).padStart(2, "0");
             {pad(member.number)}
           </span>
         </a>
+        </div>
       ))
     }
   </div>
@@ -105,10 +138,11 @@ const pad = (number: number) => String(number).padStart(2, "0");
       <a class="button-secondary" href="/about">Cerita kami</a>
     </div>
   </div>
+  </div>
 </section>
 
 <style>
-  .hero {
+  .hero-stage {
     padding: 128px 32px 80px;
   }
 
@@ -132,10 +166,15 @@ const pad = (number: number) => String(number).padStart(2, "0");
     margin-top: 32px;
   }
 
-  .hero-motto {
+  .hero-motto-cell {
+    display: grid;
     grid-column: 3 / span 5;
     grid-row: 2 / span 2;
     align-self: center;
+    justify-items: center;
+  }
+
+  .hero-motto {
     padding: 0 24px;
     font-size: 72px;
     font-weight: 500;
@@ -155,6 +194,7 @@ const pad = (number: number) => String(number).padStart(2, "0");
   .hero-face {
     position: relative;
     isolation: isolate;
+    display: block;
     aspect-ratio: 1;
     overflow: hidden;
     border-radius: var(--radius-pillar-small);
@@ -385,6 +425,88 @@ const pad = (number: number) => String(number).padStart(2, "0");
     .hero-face-image,
     .hero-face-number {
       transition: none;
+    }
+  }
+  /*
+   * Adegan scroll setelah hero: tampilan hero "terkunci" di layar (sticky)
+   * selama section ini di-scroll. Kotak wajah beterbangan menjauhi motto
+   * ("beda kepala") dan motto membesar ("satu cerita"). Mengikuti posisi
+   * scroll, jadi scroll ke atas mengembalikan semuanya.
+   * Browser tanpa dukungan (misalnya Firefox) menampilkan hero biasa.
+   */
+  @supports (animation-timeline: view()) {
+    .hero {
+      height: 210vh;
+      view-timeline-name: --hero-scene;
+    }
+
+    .hero-stage {
+      position: sticky;
+      top: 0;
+    }
+
+    .hero-cell {
+      animation: hero-scatter linear both;
+    }
+
+    .hero-motto-cell {
+      animation: hero-motto-grow linear both;
+    }
+
+    .hero-label,
+    .hero-footer {
+      animation: hero-scene-fade linear both;
+    }
+
+    /* Timeline di aturan terpisah supaya tidak digabung minifier ke shorthand. */
+    .hero .hero-cell,
+    .hero .hero-motto-cell {
+      animation-timeline: --hero-scene;
+      animation-range: contain 0% contain 100%;
+    }
+
+    .hero .hero-label,
+    .hero .hero-footer {
+      animation-timeline: --hero-scene;
+      animation-range: contain 0% contain 25%;
+    }
+
+    /* "Reduce motion": tanpa terbang dan membesar, kotak cukup memudar. */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-cell {
+        animation-name: hero-scene-fade;
+      }
+
+      .hero-motto-cell {
+        animation-name: none;
+      }
+    }
+  }
+
+  @keyframes hero-scatter {
+    0% {
+      opacity: 1;
+      transform: none;
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(calc(var(--dx) * 28vw), calc(var(--dy) * 45vh))
+        rotate(var(--rot)) scale(1.3);
+    }
+  }
+
+  @keyframes hero-motto-grow {
+    to {
+      transform: scale(1.9);
+    }
+  }
+
+  @keyframes hero-scene-fade {
+    to {
+      opacity: 0;
     }
   }
 </style>

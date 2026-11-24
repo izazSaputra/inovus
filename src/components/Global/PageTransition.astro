@@ -1,0 +1,360 @@
+<!--
+  Transisi halaman + intro.
+
+  - Intro: kunjungan pertama dalam satu tab dimulai dengan layar biru, logo
+    "dibangun" pilar demi pilar, lalu tiga pilar biru terangkat ke atas.
+  - Pindah halaman: klik link internal → pilar naik menutup layar → halaman
+    baru dibuka dalam keadaan tertutup → pilar terangkat lagi.
+  - "Reduce motion": geser diganti pudar.
+
+  Setelah layar terbuka, dikirim event "inovus:reveal" supaya animasi halaman
+  (misalnya absen di Home) mulai tepat saat terlihat.
+-->
+<div class="page-transition" aria-hidden="true">
+  <span class="pt-col"></span>
+  <span class="pt-col"></span>
+  <span class="pt-col"></span>
+
+  <div class="pt-brand">
+    <svg class="pt-logo" viewBox="0 0 170 201" fill="none">
+      <path
+        class="pt-pillar pt-pillar-left"
+        d="M46.5608 0H4.95224C2.22123 0 0 2.59692 0 5.81273V66.9374V133.875V146.156C0 176.348 20.8407 200.812 46.5608 200.812H49.7531C50.7241 200.812 51.5131 199.89 51.5131 198.749V133.875V66.9374V5.81273C51.5131 2.59692 49.2918 0 46.5608 0Z"
+      ></path>
+      <path
+        class="pt-pillar pt-pillar-middle"
+        d="M105.332 46.4533H63.7235C60.9925 46.4533 58.7712 48.2493 58.7712 50.4579V92.6275V138.814V147.284C58.7712 168.108 79.6119 184.988 105.332 184.988H108.524C109.495 184.988 110.284 184.357 110.284 183.568V138.814V92.6275V50.4579C110.284 48.2493 108.063 46.4533 105.332 46.4533Z"
+      ></path>
+      <path
+        class="pt-pillar pt-pillar-right"
+        d="M164.116 0H122.507C119.776 0 117.555 2.18433 117.555 4.87833V56.21V112.432V122.747C117.555 148.097 138.396 168.654 164.116 168.654H167.308C168.279 168.654 169.068 167.878 169.068 166.919V112.432V56.21V4.87833C169.068 2.18433 166.847 0 164.116 0Z"
+      ></path>
+      <path
+        class="pt-dot"
+        d="M60.7866 29.0758V5.60641C60.7866 2.51196 63.2991 0.0121155 66.3821 0.0121155H102.614C105.745 0.0121155 108.294 2.56049 108.294 5.69136V29.0879C108.294 35.4103 103.16 40.5435 96.836 40.5435H72.2325C65.9087 40.5435 60.7744 35.4103 60.7744 29.0879L60.7866 29.0758Z"
+      ></path>
+    </svg>
+    <p class="pt-motto">Beda kepala. <span>Satu cerita.</span></p>
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const root = document.documentElement;
+    const ARRIVING = "inovus-transition";
+    const INTRO_SEEN = "inovus-intro";
+    const reduceMotion = () =>
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let arriving = false;
+    let intro = false;
+
+    try {
+      arriving = sessionStorage.getItem(ARRIVING) === "1";
+      sessionStorage.removeItem(ARRIVING);
+      intro = !arriving && sessionStorage.getItem(INTRO_SEEN) !== "1";
+      sessionStorage.setItem(INTRO_SEEN, "1");
+    } catch {}
+
+    // Dipasang sebelum isi halaman tergambar, supaya tidak ada kedipan.
+    if (arriving || intro) root.classList.add("pt-covered");
+    if (intro) root.classList.add("pt-intro");
+
+    const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const loaded = new Promise((resolve) => {
+      if (document.readyState === "complete") resolve();
+      else window.addEventListener("load", resolve, { once: true });
+    });
+
+    const reveal = () => {
+      document.dispatchEvent(new CustomEvent("inovus:reveal"));
+      if (!root.classList.contains("pt-covered")) return;
+
+      root.classList.add("pt-revealing");
+      setTimeout(() => {
+        root.classList.remove("pt-covered", "pt-revealing", "pt-intro");
+      }, 1000);
+    };
+
+    // Tunggu halaman siap (dan intro selesai), tapi jangan selamanya.
+    const minimum = intro ? 2100 : arriving ? 200 : 0;
+    const maximum = intro ? 4000 : 1800;
+    Promise.race([Promise.all([loaded, wait(minimum)]), wait(maximum)]).then(reveal);
+
+    // Kembali lewat tombol Back: halaman dipulihkan dari cache masih tertutup.
+    window.addEventListener("pageshow", (event) => {
+      if (!event.persisted) return;
+      root.classList.remove("pt-leaving", "pt-intro");
+      root.classList.add("pt-covered");
+      setTimeout(reveal, 100);
+    });
+
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest("a");
+      if (
+        !link ||
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey ||
+        (link.target && link.target !== "_self") ||
+        link.hasAttribute("download")
+      ) {
+        return;
+      }
+
+      const url = new URL(link.href, location.href);
+      const samePage =
+        url.pathname === location.pathname && url.search === location.search;
+      if (url.origin !== location.origin || samePage) return;
+
+      event.preventDefault();
+      try {
+        sessionStorage.setItem(ARRIVING, "1");
+      } catch {}
+
+      root.classList.add("pt-leaving");
+      setTimeout(() => {
+        location.href = url.href;
+      }, reduceMotion() ? 280 : 720);
+    });
+  })();
+</script>
+
+<style is:global>
+  .page-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  html.pt-covered .page-transition,
+  html.pt-leaving .page-transition {
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  /* Pilar: sudut kiri bawah membulat seperti di logo. */
+  .pt-col {
+    /* Lebih tinggi dari layar: lengkungan bawah baru terlihat saat bergerak. */
+    height: calc(100vh + 120px);
+    background-color: var(--primary);
+    border-radius: 0 0 0 96px;
+    transform: translateY(105%);
+  }
+
+  .pt-col:nth-child(2) {
+    --pt-order: 1;
+  }
+
+  .pt-col:nth-child(3) {
+    --pt-order: 2;
+  }
+
+  html.pt-covered .pt-col {
+    transform: none;
+  }
+
+  html.pt-revealing .pt-col {
+    animation: pt-lift 700ms cubic-bezier(0.76, 0, 0.24, 1) forwards;
+    animation-delay: calc(var(--pt-order, 0) * 80ms);
+  }
+
+  html.pt-leaving .pt-col {
+    animation: pt-cover 560ms cubic-bezier(0.76, 0, 0.24, 1) forwards;
+    animation-delay: calc(var(--pt-order, 0) * 70ms);
+  }
+
+  @keyframes pt-lift {
+    from {
+      transform: none;
+    }
+    to {
+      transform: translateY(-105%);
+    }
+  }
+
+  @keyframes pt-cover {
+    from {
+      transform: translateY(105%);
+    }
+    to {
+      transform: none;
+    }
+  }
+
+  /* Logo putih di tengah layar biru. */
+  .pt-brand {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+  }
+
+  html.pt-covered .pt-brand {
+    opacity: 1;
+  }
+
+  html.pt-leaving .pt-brand {
+    animation: pt-fade-in 240ms ease 420ms forwards;
+  }
+
+  html.pt-revealing .pt-brand {
+    animation: pt-brand-out 360ms ease forwards;
+  }
+
+  .pt-logo {
+    width: 96px;
+    height: auto;
+    overflow: visible;
+  }
+
+  .pt-pillar {
+    fill: var(--surface);
+  }
+
+  .pt-dot {
+    fill: var(--accent);
+  }
+
+  .pt-pillar,
+  .pt-dot {
+    transform-box: fill-box;
+    transform-origin: center bottom;
+  }
+
+  .pt-motto {
+    color: var(--surface);
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.3px;
+    opacity: 0;
+  }
+
+  .pt-motto span {
+    color: var(--accent);
+    font-family: var(--font-display-solid);
+    font-weight: 700;
+  }
+
+  /* Intro: pilar naik satu per satu, titik oranye jatuh, lalu motto. */
+  html.pt-intro .pt-pillar {
+    animation: pt-pillar-rise 620ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  }
+
+  html.pt-intro .pt-pillar-left {
+    animation-delay: 150ms;
+  }
+
+  html.pt-intro .pt-pillar-middle {
+    animation-delay: 300ms;
+  }
+
+  html.pt-intro .pt-pillar-right {
+    animation-delay: 450ms;
+  }
+
+  html.pt-intro .pt-dot {
+    animation: pt-dot-drop 700ms cubic-bezier(0.3, 0, 0.2, 1) 900ms backwards;
+  }
+
+  html.pt-intro .pt-motto {
+    animation: pt-fade-in 500ms ease 1350ms forwards;
+  }
+
+  @keyframes pt-pillar-rise {
+    from {
+      opacity: 0;
+      transform: translateY(60%) scaleY(0.4);
+    }
+  }
+
+  @keyframes pt-dot-drop {
+    0% {
+      opacity: 0;
+      transform: translateY(-260%);
+    }
+    55% {
+      opacity: 1;
+      transform: translateY(0) scale(1.15, 0.8);
+    }
+    75% {
+      transform: translateY(-30%) scale(0.95, 1.05);
+    }
+    100% {
+      transform: none;
+    }
+  }
+
+  @keyframes pt-fade-in {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes pt-brand-out {
+    to {
+      opacity: 0;
+      transform: translate(-50%, calc(-50% - 40px));
+    }
+  }
+
+  /* Reduce motion: tanpa geser dan lompatan, cukup pudar. */
+  @media (prefers-reduced-motion: reduce) {
+    .page-transition {
+      background-color: var(--primary);
+      opacity: 0;
+    }
+
+    .pt-col {
+      display: none;
+    }
+
+    html.pt-covered .page-transition {
+      opacity: 1;
+    }
+
+    html.pt-leaving .page-transition {
+      animation: pt-fade-in 240ms ease forwards;
+    }
+
+    html.pt-revealing .page-transition {
+      animation: pt-fade-out 400ms ease forwards;
+    }
+
+    html.pt-leaving .pt-brand,
+    html.pt-revealing .pt-brand {
+      animation: none;
+      opacity: 1;
+    }
+
+    html.pt-intro .pt-pillar,
+    html.pt-intro .pt-dot {
+      animation-name: pt-fade-in-from-zero;
+      animation-timing-function: ease;
+    }
+
+    @keyframes pt-fade-out {
+      to {
+        opacity: 0;
+      }
+    }
+
+    @keyframes pt-fade-in-from-zero {
+      from {
+        opacity: 0;
+      }
+    }
+  }
+</style>

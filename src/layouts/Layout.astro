@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import PageTransition from "../components/Global/PageTransition.astro";
 
 export interface props {
   pageTitle: string;
@@ -14,6 +15,7 @@ export interface props {
     <!-- <link rel="icon" type="image/svg+xml" href="/favicon.svg" /> -->
   </head>
   <body>
+    <PageTransition />
     <slot />
   </body>
 </html>
