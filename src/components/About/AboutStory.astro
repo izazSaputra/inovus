@@ -19,20 +19,20 @@ const values = [
 
 <section class="about-story" aria-labelledby="about-story-title">
   <div class="about-story-intro">
-    <div>
-      <p class="about-story-label">Cerita</p>
-      <h2 id="about-story-title">
+    <div data-reveal-stagger>
+      <p class="about-story-label" data-reveal>Cerita</p>
+      <h2 id="about-story-title" data-reveal="mask">
         Inovatif
         <span>+ us.</span>
       </h2>
     </div>
 
-    <div class="about-story-content">
-      <p>
+    <div class="about-story-content" data-reveal-stagger data-reveal-offset="200">
+      <p data-reveal>
         Inovus berasal dari dua kata: inovatif dan us, yang artinya kita.
         Ide-ide baru terasa lebih seru kalau dikerjakan bareng-bareng.
       </p>
-      <p>
+      <p data-reveal>
         Di luar tugas dan jadwal kuliah, yang paling kami ingat justru hal-hal
         sederhana: ketawa bareng, saling bantu waktu ada yang kesulitan, dan
         saling peduli satu sama lain.
@@ -50,6 +50,28 @@ const values = [
     }
   </ul>
 </section>
+
+<script>
+  const list = document.querySelector<HTMLElement>(".about-story-values");
+
+  if (list) {
+    const items = [...list.querySelectorAll<HTMLElement>(".about-story-value")];
+
+    const update = () => {
+      const viewport = window.innerHeight;
+      const rect = list.getBoundingClientRect();
+      const draw = Math.min(Math.max((viewport * 0.9 - rect.top) / (viewport * 0.45), 0), 1);
+      list.style.setProperty("--draw", draw.toFixed(4));
+      items.forEach((item, index) => {
+        item.classList.toggle("is-lit", draw > index / items.length + 0.04);
+      });
+    };
+
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+  }
+</script>
 
 <style>
   .about-story {
@@ -112,11 +134,16 @@ const values = [
       transparent 32px
     );
     background-position: left top;
-    background-size: 100% 1px;
+    background-size: calc(100% * var(--draw, 1)) 1px;
     background-repeat: no-repeat;
   }
 
+  :global(.js) .about-story-values {
+    --draw: 0;
+  }
+
   .about-story-value {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -134,6 +161,55 @@ const values = [
     background-position: left top;
     background-size: 1px 100%;
     background-repeat: no-repeat;
+  }
+
+  .about-story-value::before {
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: 9px;
+    height: 9px;
+    border-radius: 2px;
+    background-color: var(--accent);
+  }
+
+  :global(.js) .about-story-value {
+    transition: background-size 800ms cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  :global(.js) .about-story-value + .about-story-value {
+    background-size: 1px 0%;
+  }
+
+  :global(.js) .about-story-value::before {
+    transform: scale(0);
+    transition: transform 500ms cubic-bezier(0.3, 1.8, 0.5, 1);
+  }
+
+  :global(.js) .about-story-value > * {
+    opacity: 0.15;
+    transform: translateY(16px);
+    transition:
+      opacity 700ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  :global(.js) .about-story-value > p {
+    transition-delay: 80ms;
+  }
+
+  .about-story-value.is-lit > * {
+    opacity: 1;
+    transform: none;
+  }
+
+  .about-story-value.is-lit::before {
+    transform: none;
+  }
+
+  .about-story-value + .about-story-value.is-lit {
+    background-size: 1px 100%;
   }
 
   .about-story-value h3 {
