@@ -1,17 +1,29 @@
 ---
 import { Image } from "astro:assets";
 import classPhoto from "../../assets/about/aboutPreview.jpg";
+
+const pillars = [0, 1, 2];
 ---
 
 <section class="about-photo" aria-label="Foto bersama kelas Inovus">
   <figure>
     <div class="about-photo-frame">
-      <Image
-        src={classPhoto}
-        alt="Foto bersama kelas PTI-B angkatan 2025 Universitas Negeri Malang"
-        class="about-photo-image parallax-photo"
-        width={2240}
-      />
+      {
+        pillars.map((index) => (
+          <div class="about-photo-pillar" style={`--index: ${index}`}>
+            <Image
+              src={classPhoto}
+              alt={
+                index === 0
+                  ? "Foto bersama kelas PTI-B angkatan 2025 Universitas Negeri Malang"
+                  : ""
+              }
+              class="about-photo-image parallax-photo"
+              width={2240}
+            />
+          </div>
+        ))
+      }
     </div>
 
     <figcaption>
@@ -21,22 +33,69 @@ import classPhoto from "../../assets/about/aboutPreview.jpg";
   </figure>
 </section>
 
+<script>
+  const frame = document.querySelector<HTMLElement>(".about-photo-frame");
+
+  if (frame) {
+    const update = () => {
+      const viewport = window.innerHeight;
+      const rect = frame.getBoundingClientRect();
+      const progress = Math.min(Math.max((viewport - rect.top) / (viewport * 0.8), 0), 1);
+      frame.style.setProperty("--split", ((1 - progress) ** 1.6).toFixed(4));
+    };
+
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+  }
+</script>
+
 <style>
   .about-photo {
     padding: 64px 32px 80px;
   }
 
   .about-photo-frame {
+    position: relative;
     aspect-ratio: 16 / 9;
     overflow: clip;
     border: 1px solid var(--border);
     border-radius: var(--radius-pillar);
+  }
+
+  .about-photo-pillar {
+    --gap: calc(6px * var(--split, 0));
+    --round: calc(32px * var(--split, 0));
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(100% / 3 * var(--index));
+    width: calc(100% / 3 + 1px);
+    overflow: clip;
     background-color: var(--placeholder-color);
+    transform: translateY(calc(var(--rise) * var(--split, 0)));
+    clip-path: inset(0 var(--gap) round var(--round) var(--round) 0 0);
+  }
+
+  .about-photo-pillar:nth-child(1) {
+    --rise: 38%;
+  }
+
+  .about-photo-pillar:nth-child(2) {
+    --rise: 68%;
+  }
+
+  .about-photo-pillar:nth-child(3) {
+    --rise: 50%;
   }
 
   .about-photo-image {
+    position: absolute;
+    top: 0;
+    left: calc((100% - 1px) * var(--index) * -1);
     display: block;
-    width: 100%;
+    width: calc((100% - 1px) * 3);
+    max-width: none;
     height: 100%;
     object-fit: cover;
     object-position: center 33%;
