@@ -6,27 +6,33 @@ const heroFacts = [
 ];
 ---
 
-<section class="about-hero" aria-labelledby="about-hero-title">
-  <p class="about-hero-label">
+<section class="about-hero" aria-labelledby="about-hero-title" data-reveal-stagger>
+  <p class="about-hero-label" data-reveal>
     PTI-B <span aria-hidden="true">/</span> ANGKATAN 2025
   </p>
 
-  <h1 id="about-hero-title">
-    Kenal <span>Inovus</span>
+  <h1 id="about-hero-title" data-reveal="build">
+    <span class="about-hero-word" style="--side: -1">Kenal</span>{" "}
+    <span class="about-hero-word" style="--side: 1"><span class="about-hero-name">Inovus</span></span>
     <br />
-    lebih dekat.
+    <span class="about-hero-word" style="--side: -1; --line: 1">lebih</span>{" "}
+    <span class="about-hero-word" style="--side: 1; --line: 1">dekat.</span>
   </h1>
-  
 
-  <p class="about-hero-description">
+  <p class="about-hero-description" data-reveal>
     Satu kelas, banyak kepala, dan cerita yang terus bertambah. Di sini kamu
     bisa kenalan sama orang-orangnya dan momen yang kami simpan bersama.
   </p>
 
-  <dl class="about-hero-facts">
+  <dl
+    class="about-hero-facts"
+    data-reveal="build"
+    data-reveal-stagger="120"
+    data-reveal-offset="1300"
+  >
     {
       heroFacts.map((fact) => (
-        <div class="about-hero-fact">
+        <div class="about-hero-fact" data-reveal>
           <dt>{fact.label}</dt>
           <dd>{fact.value}</dd>
         </div>
@@ -63,14 +69,34 @@ const heroFacts = [
     letter-spacing: -4px;
   }
 
-  .about-hero h1 span {
-    display: inline;
+  .about-hero-name {
     color: var(--primary);
     font-family: var(--font-display);
     font-size: 1.15em;
     font-weight: 700;
     letter-spacing: -2px;
     line-height: 0;
+  }
+
+  .about-hero-word {
+    display: inline-block;
+  }
+
+  :global(.js) .about-hero-word {
+    --word-delay: calc(var(--reveal-delay, 0ms) + 400ms + var(--line, 0) * 160ms);
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateX(calc(var(--side) * 1.4em));
+    transition:
+      opacity 1000ms cubic-bezier(0.33, 1, 0.68, 1) var(--word-delay),
+      filter 1000ms cubic-bezier(0.33, 1, 0.68, 1) var(--word-delay),
+      transform 1600ms cubic-bezier(0.33, 1, 0.68, 1) var(--word-delay);
+  }
+
+  .about-hero h1.is-revealed .about-hero-word {
+    opacity: 1;
+    filter: none;
+    transform: none;
   }
 
   .about-hero-description {
@@ -82,24 +108,36 @@ const heroFacts = [
   }
 
   .about-hero-facts {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     margin: 96px -32px 0;
-    background-image:
-      repeating-linear-gradient(
-        to right,
-        var(--frame) 0px,
-        var(--frame) 20px,
-        transparent 20px,
-        transparent 32px
-      ),
-    background-position:
-      left top,
-      left bottom;
-    background-size:
-      100% 1px,
-      100% 1px;
-    background-repeat: no-repeat;
+  }
+
+  .about-hero-facts::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 1px;
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--frame) 0px,
+      var(--frame) 20px,
+      transparent 20px,
+      transparent 32px
+    );
+  }
+
+  :global(.js) .about-hero-facts::before {
+    clip-path: inset(0 50%);
+    transition: clip-path 1000ms cubic-bezier(0.65, 0, 0.35, 1)
+      calc(var(--reveal-delay, 0ms) + 700ms);
+  }
+
+  .about-hero-facts.is-revealed::before {
+    clip-path: inset(0 0);
   }
 
   .about-hero-fact {
