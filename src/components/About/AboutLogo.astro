@@ -33,28 +33,58 @@ const logoMeanings = [
 ];
 ---
 
-<section class="about-logo" aria-labelledby="about-logo-title">
-  <p class="about-logo-label">Logo</p>
-  <h2 id="about-logo-title">
+<section
+  class="about-logo"
+  aria-labelledby="about-logo-title"
+  data-reveal-stagger
+  data-active="0"
+>
+  <p class="about-logo-label" data-reveal>Logo</p>
+  <h2 id="about-logo-title" data-reveal="mask">
     Satu bentuk.
     <span>Empat makna.</span>
   </h2>
 
   <div class="about-logo-body">
-    <figure class="about-logo-feature">
+    <figure class="about-logo-feature" data-reveal="build">
       <span class="about-logo-tag about-logo-tag-top">Logomark</span>
-      <Image
-        src={logoInovus}
-        alt="Logo Inovus: tiga pilar biru dengan satu titik oranye di atas pilar tengah"
+      <svg
         class="about-logo-feature-image"
-      />
+        viewBox="0 0 170 201"
+        fill="none"
+        role="img"
+        aria-label="Logo Inovus: tiga pilar biru dengan satu titik oranye di atas pilar tengah"
+      >
+        <path
+          class="logo-pillar"
+          style="--order: 0"
+          d="M46.5608 0H4.95224C2.22123 0 0 2.59692 0 5.81273V66.9374V133.875V146.156C0 176.348 20.8407 200.812 46.5608 200.812H49.7531C50.7241 200.812 51.5131 199.89 51.5131 198.749V133.875V66.9374V5.81273C51.5131 2.59692 49.2918 0 46.5608 0Z"
+        ></path>
+        <path
+          class="logo-pillar logo-pillar-middle"
+          style="--order: 1"
+          d="M105.332 46.4533H63.7235C60.9925 46.4533 58.7712 48.2493 58.7712 50.4579V92.6275V138.814V147.284C58.7712 168.108 79.6119 184.988 105.332 184.988H108.524C109.495 184.988 110.284 184.357 110.284 183.568V138.814V92.6275V50.4579C110.284 48.2493 108.063 46.4533 105.332 46.4533Z"
+        ></path>
+        <path
+          class="logo-pillar"
+          style="--order: 2"
+          d="M164.116 0H122.507C119.776 0 117.555 2.18433 117.555 4.87833V56.21V112.432V122.747C117.555 148.097 138.396 168.654 164.116 168.654H167.308C168.279 168.654 169.068 167.878 169.068 166.919V112.432V56.21V4.87833C169.068 2.18433 166.847 0 164.116 0Z"
+        ></path>
+        <path
+          class="logo-dot"
+          d="M60.7866 29.0758V5.60641C60.7866 2.51196 63.2991 0.0121155 66.3821 0.0121155H102.614C105.745 0.0121155 108.294 2.56049 108.294 5.69136V29.0879C108.294 35.4103 103.16 40.5435 96.836 40.5435H72.2325C65.9087 40.5435 60.7744 35.4103 60.7744 29.0879L60.7866 29.0758Z"
+        ></path>
+      </svg>
       <span class="about-logo-tag about-logo-tag-bottom">PTI-B 2025</span>
     </figure>
 
-    <ul class="about-logo-list">
+    <ul class="about-logo-list" data-reveal-stagger="120" data-reveal-offset="300">
       {
-        logoMeanings.map((meaning) => (
-          <li class="about-logo-item">
+        logoMeanings.map((meaning, index) => (
+          <li
+            class:list={["about-logo-item", { "is-active": index === 0 }]}
+            data-reveal
+          >
             <div class="about-logo-mark">
               <Image src={meaning.logo} alt="" class="about-logo-image" />
             </div>
@@ -68,6 +98,46 @@ const logoMeanings = [
     </ul>
   </div>
 </section>
+
+<script>
+  const section = document.querySelector<HTMLElement>(".about-logo");
+
+  if (section) {
+    const items = [...section.querySelectorAll<HTMLElement>(".about-logo-item")];
+    let hovered = -1;
+
+    const setActive = (active: number) => {
+      if (section.dataset.active === String(active)) return;
+      section.dataset.active = String(active);
+      items.forEach((item, index) => item.classList.toggle("is-active", index === active));
+    };
+
+    const update = () => {
+      if (hovered >= 0) return setActive(hovered);
+      const line = window.innerHeight * 0.55;
+      let active = 0;
+      items.forEach((item, index) => {
+        if (item.getBoundingClientRect().top < line) active = index;
+      });
+      setActive(active);
+    };
+
+    items.forEach((item, index) => {
+      item.addEventListener("mouseenter", () => {
+        hovered = index;
+        update();
+      });
+      item.addEventListener("mouseleave", () => {
+        hovered = -1;
+        update();
+      });
+    });
+
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+  }
+</script>
 
 <style>
   .about-logo {
@@ -113,6 +183,82 @@ const logoMeanings = [
   .about-logo-feature-image {
     width: 40%;
     height: auto;
+    overflow: visible;
+    transition: transform 1000ms cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .about-logo[data-active="3"] .about-logo-feature-image {
+    transform: rotate(-90deg);
+  }
+
+  .logo-pillar {
+    fill: var(--primary);
+  }
+
+  .logo-dot {
+    fill: var(--accent);
+  }
+
+  .logo-pillar,
+  .logo-dot {
+    transition: fill 500ms ease;
+  }
+
+  .about-logo[data-active="1"] .logo-pillar:not(.logo-pillar-middle),
+  .about-logo[data-active="2"] .logo-pillar-middle,
+  .about-logo[data-active="2"] .logo-dot,
+  .about-logo[data-active="3"] .logo-dot {
+    fill: var(--border);
+  }
+
+  .logo-pillar,
+  .logo-dot {
+    transform-box: fill-box;
+    transform-origin: center bottom;
+  }
+
+  :global(.js) .about-logo-feature .logo-pillar,
+  :global(.js) .about-logo-feature .logo-dot {
+    opacity: 0;
+  }
+
+  .about-logo-feature.is-revealed .logo-pillar {
+    animation: logo-pillar-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(250ms + var(--order) * 150ms);
+  }
+
+  .about-logo-feature.is-revealed .logo-dot {
+    animation: logo-dot-drop 800ms cubic-bezier(0.3, 0, 0.2, 1) 900ms both;
+  }
+
+  @keyframes logo-pillar-rise {
+    from {
+      opacity: 0;
+      transform: translateY(60%) scaleY(0.4);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes logo-dot-drop {
+    0% {
+      opacity: 0;
+      transform: translateY(-260%);
+    }
+    55% {
+      opacity: 1;
+      transform: translateY(0) scale(1.15, 0.8);
+    }
+    75% {
+      opacity: 1;
+      transform: translateY(-30%) scale(0.95, 1.05);
+    }
+    100% {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   .about-logo-tag {
@@ -155,6 +301,15 @@ const logoMeanings = [
     background-position: left top;
     background-size: 100% 1px;
     background-repeat: no-repeat;
+  }
+
+  .about-logo-item > * {
+    opacity: 0.35;
+    transition: opacity 400ms ease;
+  }
+
+  .about-logo-item.is-active > * {
+    opacity: 1;
   }
 
   .about-logo-mark {
