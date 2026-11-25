@@ -5,17 +5,17 @@ import { members, formatBirthDate } from "../../data/members";
 import logoInovus from "../../assets/logo/logo_inovus.svg";
 ---
 
-<section class="members" aria-labelledby="members-title">
-  <p class="members-label">Anggota</p>
-  <h2 id="members-title">
+<section class="members" aria-labelledby="members-title" data-reveal-stagger>
+  <p class="members-label" data-reveal>Anggota</p>
+  <h2 id="members-title" data-reveal="mask">
     Satu kelas,
     <span>banyak kepala.</span>
   </h2>
 
-  <ul class="members-grid">
+  <ul class="members-grid" data-reveal-stagger="90" data-reveal-columns="4">
     {
       members.map((member) => (
-        <li class="member" id={`absen-${String(member.number).padStart(2, "0")}`}>
+        <li class="member" data-reveal id={`absen-${String(member.number).padStart(2, "0")}`}>
           <div class="member-card">
             {member.photo ? (
               <Image
