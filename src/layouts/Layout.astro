@@ -13,6 +13,9 @@ export interface props {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>{Astro.props.pageTitle}</title>
+    <script is:inline>
+      document.documentElement.classList.add("js");
+    </script>
   </head>
   <body>
     <PageTransition />
@@ -58,6 +61,60 @@ export interface props {
       window.addEventListener("scroll", update, { passive: true });
       window.addEventListener("resize", update);
       update();
+
+      for (const group of document.querySelectorAll<HTMLElement>("[data-reveal-stagger]")) {
+        const step = Number(group.dataset.revealStagger) || 90;
+        const offset = Number(group.dataset.revealOffset) || 0;
+        const columns = Number(group.dataset.revealColumns) || 0;
+        const items = group.querySelectorAll<HTMLElement>(":scope > [data-reveal]");
+        items.forEach((item, index) => {
+          const position = columns ? index % columns : index;
+          item.style.setProperty("--reveal-delay", `${offset + position * step}ms`);
+        });
+      }
+
+      const revealItems = [...document.querySelectorAll<HTMLElement>("[data-reveal]")];
+      let revealTops: number[] = [];
+      let revealing = false;
+
+      const layoutTop = (element: HTMLElement) => {
+        let top = 0;
+        let node: HTMLElement | null = element;
+        while (node) {
+          top += node.offsetTop;
+          node = node.offsetParent as HTMLElement | null;
+        }
+        return top;
+      };
+
+      const measureReveal = () => {
+        revealTops = revealItems.map(layoutTop);
+      };
+
+      const checkReveal = () => {
+        if (!revealing) return;
+        const line = window.scrollY + window.innerHeight * 0.92;
+        revealItems.forEach((element, index) => {
+          if (revealTops[index] < line) element.classList.add("is-revealed");
+        });
+      };
+
+      const startReveal = () => {
+        if (revealing) return;
+        revealing = true;
+        measureReveal();
+        checkReveal();
+      };
+
+      lenis.on("scroll", checkReveal);
+      window.addEventListener("scroll", checkReveal, { passive: true });
+      window.addEventListener("resize", () => {
+        measureReveal();
+        checkReveal();
+      });
+      window.addEventListener("load", measureReveal);
+      document.addEventListener("inovus:reveal", startReveal);
+      setTimeout(startReveal, 4500);
     </script>
   </body>
 </html>
