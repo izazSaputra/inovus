@@ -17,7 +17,6 @@ for (let row = 1; row <= rows; row++) {
   }
 }
 
-// Baris atas paling cepat, supaya kotak tidak saling menimpa saat parallax.
 const rowSpeed = [1, 0.78, 0.56, 0.36, 0.18];
 const drift = (index: number) => {
   const { row, column } = cells[index];
@@ -28,7 +27,6 @@ const drift = (index: number) => {
 
 <section class="hero" aria-labelledby="hero-title">
   <script is:inline>
-
     (() => {
       const hero = document.currentScript.parentElement;
 

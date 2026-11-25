@@ -54,7 +54,6 @@
   --text-display: 88px;
   --text-heading: 56px;
 
-  /* Bentuk pilar logo: sudut kecil, kecuali sudut kiri bawah yang membulat besar. */
   --radius-pillar: 6px 6px 6px 48px;
   --radius-pillar-small: 4px 4px 4px 20px;
 
@@ -87,7 +86,6 @@
 }
 
 html {
-  /* Elemen yang terbang keluar layar (adegan scroll) tidak membuat scroll ke samping. */
   overflow-x: clip;
 }
 

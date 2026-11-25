@@ -1,6 +1,5 @@
 import type { ImageMetadata } from "astro";
 
-// Foto sudah dipotong oleh scripts/crop-members.mjs (npm run crop:members).
 const faces = import.meta.glob<{ default: ImageMetadata }>(
   "../assets/members/faces/*.jpg",
   { eager: true },
@@ -12,9 +11,7 @@ const portraits = import.meta.glob<{ default: ImageMetadata }>(
 );
 
 export interface MemberPhoto {
-  /** Persegi, kepala dan bahu. */
   face: ImageMetadata;
-  /** 4:5, setengah badan. */
   portrait: ImageMetadata;
 }
 
@@ -29,7 +26,6 @@ export interface Member {
   nickname: string;
   name: string;
   birthDate?: string;
-  /** Tanpa "@" */
   instagram?: string;
   role?: string;
   photo?: MemberPhoto;
