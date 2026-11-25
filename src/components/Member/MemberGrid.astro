@@ -22,7 +22,7 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
                 src={member.photo.portrait}
                 alt={`Foto ${member.name}`}
                 width={600}
-                class="member-image"
+                class="member-image parallax-photo"
                 loading="lazy"
               />
             ) : (
@@ -107,7 +107,7 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
     position: relative;
     isolation: isolate;
     aspect-ratio: 4 / 5;
-    overflow: hidden;
+    overflow: clip;
     border-radius: var(--radius-pillar);
     background-color: var(--primary);
     transition: background-color 400ms ease;
@@ -251,12 +251,5 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
   .member-instagram:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 4px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .member-card,
-    .member-image {
-      transition: none;
-    }
   }
 </style>

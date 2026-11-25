@@ -45,55 +45,15 @@ import homePreview from "../../assets/indexPreview/previewIndex.jpg";
     font-size: 14px;
   }
 
-  /*
-   * Dari satu kotak ke seluruh kelas: saat di-scroll, bingkai membuka dari
-   * kotak kecil di tengah menjadi penuh, sementara foto zoom-out.
-   * Mengikuti posisi scroll (scroll-driven animation), tanpa JavaScript.
-   * Browser yang belum mendukung (misalnya Firefox) menampilkan foto biasa.
-   */
-  @supports (animation-timeline: view()) {
-    .class-photo-frame {
-      view-timeline-name: --class-photo;
-      animation: class-photo-open linear both;
-    }
-
-    .class-photo-image {
-      transform-origin: center 33.5%;
-      animation: class-photo-zoom linear both;
-    }
-
-    /* Timeline sengaja ditulis di aturan terpisah (selektor lebih spesifik):
-       kalau digabung, minifier memasukkannya ke shorthand `animation`
-       dan browser menolak seluruh deklarasinya. */
-    .class-photo .class-photo-frame,
-    .class-photo .class-photo-image {
-      animation-timeline: --class-photo;
-      animation-range: entry 50% cover 50%;
-    }
-
-    /* Untuk "reduce motion": bingkai tetap membuka, tapi tanpa zoom. */
-    @media (prefers-reduced-motion: reduce) {
-      .class-photo-image {
-        animation: none;
-      }
-    }
+  .class-photo-frame {
+    clip-path: inset(
+      calc(30% * (1 - var(--reveal, 1))) calc(40% * (1 - var(--reveal, 1)))
+        round 6px 6px 6px calc(24px + 24px * var(--reveal, 1))
+    );
   }
 
-  @keyframes class-photo-open {
-    from {
-      clip-path: inset(30% 40% 30% 40% round 6px 6px 6px 24px);
-    }
-    to {
-      clip-path: inset(0 0 0 0 round 6px 6px 6px 48px);
-    }
-  }
-
-  @keyframes class-photo-zoom {
-    from {
-      transform: scale(1.8);
-    }
-    to {
-      transform: scale(1);
-    }
+  .class-photo-image {
+    transform: scale(calc(1.8 - 0.8 * var(--reveal, 1)));
+    transform-origin: center 33.5%;
   }
 </style>

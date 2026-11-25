@@ -1,4 +1,5 @@
 ---
+import "lenis/dist/lenis.css";
 import "../styles/global.css";
 import PageTransition from "../components/Global/PageTransition.astro";
 
@@ -17,5 +18,47 @@ export interface props {
   <body>
     <PageTransition />
     <slot />
+    <script>
+      import Lenis from "lenis";
+
+      const lenis = new Lenis({
+        autoRaf: true,
+        anchors: true,
+        stopInertiaOnNavigate: true,
+        respectReducedMotion: false,
+      });
+
+      const clamp = (value: number) => Math.min(Math.max(value, 0), 1);
+      const hero = document.querySelector<HTMLElement>(".hero");
+      const photos = [...document.querySelectorAll<HTMLElement>(".parallax-photo")];
+      const classPhotos = [...document.querySelectorAll<HTMLElement>(".class-photo-frame")];
+
+      const update = () => {
+        const viewport = window.innerHeight;
+
+        if (hero) {
+          const rect = hero.getBoundingClientRect();
+          hero.style.setProperty("--hero-p", clamp(-rect.top / rect.height).toFixed(4));
+        }
+
+        for (const photo of photos) {
+          const rect = (photo.parentElement ?? photo).getBoundingClientRect();
+          if (rect.bottom < 0 || rect.top > viewport) continue;
+          const progress = (viewport - rect.top) / (viewport + rect.height);
+          photo.style.setProperty("--p", clamp(progress).toFixed(4));
+        }
+
+        for (const frame of classPhotos) {
+          const rect = frame.getBoundingClientRect();
+          const center = rect.top + rect.height / 2;
+          frame.style.setProperty("--reveal", clamp((viewport - center) / (viewport / 2)).toFixed(4));
+        }
+      };
+
+      lenis.on("scroll", update);
+      window.addEventListener("scroll", update, { passive: true });
+      window.addEventListener("resize", update);
+      update();
+    </script>
   </body>
 </html>

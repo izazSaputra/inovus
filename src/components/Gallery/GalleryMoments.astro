@@ -63,6 +63,7 @@ const samples = [
                       src={photo.src}
                       alt={photo.alt}
                       width={1200}
+                      class="parallax-photo"
                       loading="lazy"
                     />
                   </div>
@@ -156,7 +157,7 @@ const samples = [
   }
 
   .moment-photo {
-    overflow: hidden;
+    overflow: clip;
     border-radius: var(--radius-pillar-small);
     background-color: var(--placeholder-color);
   }

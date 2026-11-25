@@ -175,3 +175,7 @@ a {
 a:hover {
   color: var(--primary);
 }
+
+.parallax-photo {
+  transform: scale(1.15) translateY(calc(-5% + 10% * var(--p, 0.5)));
+}

@@ -9,7 +9,7 @@ import classPhoto from "../../assets/about/aboutPreview.jpg";
       <Image
         src={classPhoto}
         alt="Foto bersama kelas PTI-B angkatan 2025 Universitas Negeri Malang"
-        class="about-photo-image"
+        class="about-photo-image parallax-photo"
         width={2240}
       />
     </div>
@@ -28,7 +28,7 @@ import classPhoto from "../../assets/about/aboutPreview.jpg";
 
   .about-photo-frame {
     aspect-ratio: 16 / 9;
-    overflow: hidden;
+    overflow: clip;
     border: 1px solid var(--border);
     border-radius: var(--radius-pillar);
     background-color: var(--placeholder-color);

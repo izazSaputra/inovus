@@ -5,8 +5,6 @@ import { members } from "../../data/members";
 
 const pad = (number: number) => String(number).padStart(2, "0");
 
-// Posisi tiap kotak di grid 10 × 5 (motto menempati kolom 3–7, baris 2–3),
-// dipakai untuk menghitung arah terbang kotak menjauhi motto saat di-scroll.
 const columns = 10;
 const rows = 5;
 const isMottoCell = (row: number, column: number) =>
@@ -19,32 +17,23 @@ for (let row = 1; row <= rows; row++) {
   }
 }
 
-const mottoCenter = { row: 2.5, column: 5 };
-const scatter = (index: number) => {
+// Baris atas paling cepat, supaya kotak tidak saling menimpa saat parallax.
+const rowSpeed = [1, 0.78, 0.56, 0.36, 0.18];
+const drift = (index: number) => {
   const { row, column } = cells[index];
-  const rotate = ((index * 37) % 21) - 10;
-  return `--dx: ${column - mottoCenter.column}; --dy: ${row - mottoCenter.row}; --rot: ${rotate * 2}deg;`;
+  const jitter = (((column * 7 + row * 3) % 5) - 2) * 0.04;
+  return `--speed: ${(rowSpeed[row - 1] + jitter).toFixed(3)};`;
 };
 ---
 
 <section class="hero" aria-labelledby="hero-title">
   <script is:inline>
-    // Absen pembuka: wajah muncul satu per satu.
-    // Ditulis langsung di sini supaya kelasnya terpasang sebelum wajah tampil.
-    // Animasinya hanya perubahan warna, jadi tetap diputar walau "reduce motion"
-    // aktif; yang dihilangkan hanya gerakan geser di judul (lihat CSS).
-    //
-    // Diputar saat layar terbuka (event "inovus:reveal" dari PageTransition):
-    // - halaman dibuka, di-refresh, atau didatangi dari halaman lain,
-    // - kembali ke Home lewat tombol Back (halaman dipulihkan dari cache),
-    // dan diputar ulang saat dinding wajah masuk lagi ke layar setelah sempat
-    // keluar sepenuhnya.
+
     (() => {
       const hero = document.currentScript.parentElement;
 
       const play = () => {
         hero.classList.remove("is-roll-call", "is-waiting");
-        // Paksa browser menghitung ulang gaya supaya animasi mulai dari awal.
         void hero.offsetWidth;
         hero.classList.add("is-roll-call");
       };
@@ -98,7 +87,7 @@ const scatter = (index: number) => {
 
     {
       members.map((member, index) => (
-        <div class="hero-cell" style={scatter(index)}>
+        <div class="hero-cell" style={drift(index)}>
         <a
           class:list={["hero-face", { "hero-face-empty": !member.photo }]}
           style={`--i: ${index}`}
@@ -357,12 +346,6 @@ const scatter = (index: number) => {
     }
   }
 
-  @keyframes motto-fade {
-    from {
-      opacity: 0;
-    }
-  }
-
   @keyframes roll-call-tile {
     0% {
       background-color: var(--primary);
@@ -416,97 +399,17 @@ const scatter = (index: number) => {
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .is-roll-call .hero-motto {
-      animation-name: motto-fade;
-    }
-
-    .hero-face,
-    .hero-face-image,
-    .hero-face-number {
-      transition: none;
-    }
-  }
-  /*
-   * Adegan scroll setelah hero: tampilan hero "terkunci" di layar (sticky)
-   * selama section ini di-scroll. Kotak wajah beterbangan menjauhi motto
-   * ("beda kepala") dan motto membesar ("satu cerita"). Mengikuti posisi
-   * scroll, jadi scroll ke atas mengembalikan semuanya.
-   * Browser tanpa dukungan (misalnya Firefox) menampilkan hero biasa.
-   */
-  @supports (animation-timeline: view()) {
-    .hero {
-      height: 210vh;
-      view-timeline-name: --hero-scene;
-    }
-
-    .hero-stage {
-      position: sticky;
-      top: 0;
-    }
-
-    .hero-cell {
-      animation: hero-scatter linear both;
-    }
-
-    .hero-motto-cell {
-      animation: hero-motto-grow linear both;
-    }
-
-    .hero-label,
-    .hero-footer {
-      animation: hero-scene-fade linear both;
-    }
-
-    /* Timeline di aturan terpisah supaya tidak digabung minifier ke shorthand. */
-    .hero .hero-cell,
-    .hero .hero-motto-cell {
-      animation-timeline: --hero-scene;
-      animation-range: contain 0% contain 100%;
-    }
-
-    .hero .hero-label,
-    .hero .hero-footer {
-      animation-timeline: --hero-scene;
-      animation-range: contain 0% contain 25%;
-    }
-
-    /* "Reduce motion": tanpa terbang dan membesar, kotak cukup memudar. */
-    @media (prefers-reduced-motion: reduce) {
-      .hero-cell {
-        animation-name: hero-scene-fade;
-      }
-
-      .hero-motto-cell {
-        animation-name: none;
-      }
-    }
+  .hero-label {
+    --speed: 1.1;
   }
 
-  @keyframes hero-scatter {
-    0% {
-      opacity: 1;
-      transform: none;
-    }
-    70% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-      transform: translate(calc(var(--dx) * 28vw), calc(var(--dy) * 45vh))
-        rotate(var(--rot)) scale(1.3);
-    }
+  .hero-motto-cell {
+    --speed: 0.5;
   }
 
-  @keyframes hero-motto-grow {
-    to {
-      transform: scale(1.9);
-    }
-  }
-
-  @keyframes hero-scene-fade {
-    to {
-      opacity: 0;
-    }
+  .hero-label,
+  .hero-cell,
+  .hero-motto-cell {
+    transform: translateY(calc(var(--speed) * -55vh * var(--hero-p, 0)));
   }
 </style>

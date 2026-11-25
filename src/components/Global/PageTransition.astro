@@ -1,15 +1,3 @@
-<!--
-  Transisi halaman + intro.
-
-  - Intro: kunjungan pertama dalam satu tab dimulai dengan layar biru, logo
-    "dibangun" pilar demi pilar, lalu tiga pilar biru terangkat ke atas.
-  - Pindah halaman: klik link internal → pilar naik menutup layar → halaman
-    baru dibuka dalam keadaan tertutup → pilar terangkat lagi.
-  - "Reduce motion": geser diganti pudar.
-
-  Setelah layar terbuka, dikirim event "inovus:reveal" supaya animasi halaman
-  (misalnya absen di Home) mulai tepat saat terlihat.
--->
 <div class="page-transition" aria-hidden="true">
   <span class="pt-col"></span>
   <span class="pt-col"></span>
@@ -43,8 +31,6 @@
     const root = document.documentElement;
     const ARRIVING = "inovus-transition";
     const INTRO_SEEN = "inovus-intro";
-    const reduceMotion = () =>
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     let arriving = false;
     let intro = false;
@@ -56,7 +42,6 @@
       sessionStorage.setItem(INTRO_SEEN, "1");
     } catch {}
 
-    // Dipasang sebelum isi halaman tergambar, supaya tidak ada kedipan.
     if (arriving || intro) root.classList.add("pt-covered");
     if (intro) root.classList.add("pt-intro");
 
@@ -76,12 +61,10 @@
       }, 1000);
     };
 
-    // Tunggu halaman siap (dan intro selesai), tapi jangan selamanya.
     const minimum = intro ? 2100 : arriving ? 200 : 0;
     const maximum = intro ? 4000 : 1800;
     Promise.race([Promise.all([loaded, wait(minimum)]), wait(maximum)]).then(reveal);
 
-    // Kembali lewat tombol Back: halaman dipulihkan dari cache masih tertutup.
     window.addEventListener("pageshow", (event) => {
       if (!event.persisted) return;
       root.classList.remove("pt-leaving", "pt-intro");
@@ -118,7 +101,7 @@
       root.classList.add("pt-leaving");
       setTimeout(() => {
         location.href = url.href;
-      }, reduceMotion() ? 280 : 720);
+      }, 720);
     });
   })();
 </script>
@@ -307,54 +290,6 @@
     to {
       opacity: 0;
       transform: translate(-50%, calc(-50% - 40px));
-    }
-  }
-
-  /* Reduce motion: tanpa geser dan lompatan, cukup pudar. */
-  @media (prefers-reduced-motion: reduce) {
-    .page-transition {
-      background-color: var(--primary);
-      opacity: 0;
-    }
-
-    .pt-col {
-      display: none;
-    }
-
-    html.pt-covered .page-transition {
-      opacity: 1;
-    }
-
-    html.pt-leaving .page-transition {
-      animation: pt-fade-in 240ms ease forwards;
-    }
-
-    html.pt-revealing .page-transition {
-      animation: pt-fade-out 400ms ease forwards;
-    }
-
-    html.pt-leaving .pt-brand,
-    html.pt-revealing .pt-brand {
-      animation: none;
-      opacity: 1;
-    }
-
-    html.pt-intro .pt-pillar,
-    html.pt-intro .pt-dot {
-      animation-name: pt-fade-in-from-zero;
-      animation-timing-function: ease;
-    }
-
-    @keyframes pt-fade-out {
-      to {
-        opacity: 0;
-      }
-    }
-
-    @keyframes pt-fade-in-from-zero {
-      from {
-        opacity: 0;
-      }
     }
   }
 </style>
