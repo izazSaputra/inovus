@@ -58,7 +58,9 @@ const pageLinks = [
       <a href="#top" class="footer-top-link">
         Kembali ke atas <span aria-hidden="true">↑</span>
       </a>
-      <p class="footer-copyright">© 2026 Inovus</p>
+      <p class="footer-copyright">
+        © 2026 Inovus · Dibuat oleh <a href="/member#absen-20">Izaz</a>
+      </p>
     </div>
   </div>
 </footer>
@@ -195,7 +197,25 @@ const pageLinks = [
   }
 
   .footer-copyright {
-    opacity: 0.6;
+    color: color-mix(in oklch, var(--surface) 60%, transparent);
     font-size: 12px;
+  }
+
+  .footer-copyright a {
+    color: var(--surface);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 3px;
+    transition: color 200ms ease;
+  }
+
+  .footer-copyright a:hover {
+    color: var(--accent);
+  }
+
+  .footer-copyright a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
   }
 </style>
