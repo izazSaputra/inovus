@@ -8,7 +8,7 @@ const pad = (number: number) => String(number).padStart(2, "0");
 const columns = 10;
 const rows = 5;
 const isMottoCell = (row: number, column: number) =>
-  row >= 2 && row <= 3 && column >= 3 && column <= 7;
+  row >= 2 && row <= 4 && column >= 3 && column <= 7;
 
 const cells: { row: number; column: number }[] = [];
 for (let row = 1; row <= rows; row++) {
@@ -156,14 +156,14 @@ const drift = (index: number) => {
   .hero-motto-cell {
     display: grid;
     grid-column: 3 / span 5;
-    grid-row: 2 / span 2;
+    grid-row: 2 / span 3;
     align-self: center;
     justify-items: center;
   }
 
   .hero-motto {
-    padding: 0 24px;
-    font-size: 72px;
+    padding: 0 16px;
+    font-size: 80px;
     font-weight: 500;
     line-height: 1;
     letter-spacing: -3px;
