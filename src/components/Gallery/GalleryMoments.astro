@@ -25,7 +25,7 @@ const samples = [
       isSample
         ? samples.map((sample) => (
             <li class="moment">
-              <div class="moment-info">
+              <div class="moment-info" data-reveal>
                 <p class="moment-date">Tanggal menyusul</p>
                 <h2>Nama momen</h2>
                 <p class="moment-description">
@@ -33,9 +33,9 @@ const samples = [
                 </p>
               </div>
 
-              <div class="moment-photos">
+              <div class="moment-photos" data-reveal-stagger="80" data-reveal-offset="150">
                 {Array.from({ length: sample.photoCount }, () => (
-                  <div class="moment-photo moment-photo-pending">
+                  <div class="moment-photo moment-photo-pending" data-reveal>
                     Foto menyusul
                   </div>
                 ))}
@@ -44,7 +44,7 @@ const samples = [
           ))
         : moments.map((moment) => (
             <li class="moment">
-              <div class="moment-info">
+              <div class="moment-info" data-reveal>
                 {moment.date && (
                   <p class="moment-date">{formatMomentDate(moment.date)}</p>
                 )}
@@ -55,9 +55,9 @@ const samples = [
                 <p class="moment-count">{moment.photos.length} foto</p>
               </div>
 
-              <div class="moment-photos">
+              <div class="moment-photos" data-reveal-stagger="80" data-reveal-offset="150">
                 {moment.photos.map((photo) => (
-                  <div class="moment-photo">
+                  <div class="moment-photo" data-reveal>
                     <Image
                       src={photo.src}
                       alt={photo.alt}
