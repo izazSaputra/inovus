@@ -14,9 +14,14 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
 
   <ul class="members-grid" data-reveal-stagger="90" data-reveal-columns="4">
     {
-      members.map((member) => (
-        <li class="member" data-reveal id={`absen-${String(member.number).padStart(2, "0")}`}>
-          <div class="member-card">
+      members.map((member, index) => (
+        <li
+          class="member"
+          data-reveal
+          id={`absen-${String(member.number).padStart(2, "0")}`}
+          style={`--column: ${index % 4}`}
+        >
+          <div class:list={["member-card", { "is-pending": !member.photo }]}>
             {member.photo ? (
               <Image
                 src={member.photo.portrait}
@@ -31,6 +36,7 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
 
             <span class="member-number" aria-hidden="true">
               {String(member.number).padStart(2, "0")}
+              <span class="member-present">Hadir</span>
             </span>
 
             {member.role && (
@@ -67,6 +73,42 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
     }
   </ul>
 </section>
+
+<script>
+  const members = [...document.querySelectorAll<HTMLElement>(".member")];
+
+  const call = () => {
+    const line = window.innerHeight * 0.5;
+    for (const member of members) {
+      const card = member.querySelector<HTMLElement>(".member-card");
+      if (!card) continue;
+      const rect = card.getBoundingClientRect();
+      member.classList.toggle("is-called", rect.top < line && rect.bottom > line);
+    }
+  };
+
+  window.addEventListener("scroll", call, { passive: true });
+  window.addEventListener("resize", call);
+  call();
+
+  for (const card of document.querySelectorAll<HTMLElement>(".member-card")) {
+    card.addEventListener("pointermove", (event) => {
+      if (event.pointerType !== "mouse") return;
+      const rect = card.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      card.style.setProperty("--tilt-x", `${(-y * 8).toFixed(2)}deg`);
+      card.style.setProperty("--tilt-y", `${(x * 10).toFixed(2)}deg`);
+      card.style.setProperty("--shine-x", `${((x + 0.5) * 100).toFixed(1)}%`);
+      card.style.setProperty("--shine-y", `${((y + 0.5) * 100).toFixed(1)}%`);
+    });
+
+    card.addEventListener("pointerleave", () => {
+      card.style.setProperty("--tilt-x", "0deg");
+      card.style.setProperty("--tilt-y", "0deg");
+    });
+  }
+</script>
 
 <style>
   .members {
@@ -110,7 +152,34 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
     overflow: clip;
     border-radius: var(--radius-pillar);
     background-color: var(--primary);
-    transition: background-color 400ms ease;
+    transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transition:
+      background-color 400ms ease,
+      border-radius 500ms cubic-bezier(0.3, 1.4, 0.5, 1),
+      transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .member-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background-image: radial-gradient(
+      circle at var(--shine-x, 50%) var(--shine-y, 50%),
+      oklch(100% 0 0 / 0.25),
+      transparent 55%
+    );
+    opacity: 0;
+    transition: opacity 400ms ease;
+    pointer-events: none;
+  }
+
+  .member-card:hover {
+    border-radius: 6px 6px 48px 6px;
+  }
+
+  .member-card:hover::before {
+    opacity: 1;
   }
 
   .member-card::after {
@@ -132,16 +201,46 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
     object-fit: cover;
     filter: grayscale(1) brightness(1.4) contrast(1.1);
     mix-blend-mode: multiply;
-    transition: filter 400ms ease;
+    transition:
+      filter 500ms ease,
+      scale 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
-  .member-card:hover {
+  .member-card:hover,
+  .member.is-called .member-card {
     background-color: var(--surface);
   }
 
+  .member-card.is-pending:hover,
+  .member.is-called .member-card.is-pending {
+    background-color: var(--primary);
+  }
+
+  .member-number {
+    transition: color 400ms ease;
+  }
+
+  .member-card:not(.is-pending):hover .member-number,
+  .member.is-called .member-card:not(.is-pending) .member-number,
+  .member:target .member-number {
+    color: var(--primary);
+  }
+
   .member-card:hover .member-image,
+  .member.is-called .member-image,
   .member:target .member-image {
     filter: grayscale(0) brightness(1) contrast(1);
+  }
+
+  .member-card:hover .member-image {
+    scale: 1.06;
+  }
+
+  .member.is-called .member-card,
+  .member.is-called .member-image,
+  .member.is-called .member-present,
+  .member.is-called .member-info h3 {
+    transition-delay: calc(var(--column, 0) * 110ms);
   }
 
   .member:target .member-card {
@@ -159,6 +258,32 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
     font-family: var(--font-display);
     font-size: 18px;
     font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .member-present {
+    padding: 4px 8px;
+    border-radius: 4px 4px 4px 10px;
+    background-color: var(--accent);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateX(-8px) scale(0.6);
+    transform-origin: left center;
+    transition:
+      opacity 300ms ease,
+      transform 500ms cubic-bezier(0.3, 1.8, 0.5, 1);
+  }
+
+  .member.is-called .member-present {
+    opacity: 1;
+    transform: none;
   }
 
   .member-badge {
@@ -201,6 +326,17 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
     font-size: 32px;
     font-weight: 700;
     line-height: 1;
+    transition:
+      color 400ms ease,
+      transform 500ms cubic-bezier(0.3, 1.6, 0.5, 1);
+  }
+
+  .member.is-called .member-info h3 {
+    transform: translateY(-4px);
+  }
+
+  .member-card:hover .member-info h3 {
+    transform: translateY(-6px);
   }
 
   .member-pending {
