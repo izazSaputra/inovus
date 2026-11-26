@@ -6,71 +6,83 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
 ---
 
 <section class="members" aria-labelledby="members-title" data-reveal-stagger>
-  <p class="members-label" data-reveal>Anggota</p>
+  <p class="members-label" data-reveal>
+    Anggota
+  </p>
   <h2 id="members-title" data-reveal="mask">
     Satu kelas,
     <span>banyak kepala.</span>
   </h2>
 
   <ul class="members-grid" data-reveal-stagger="90" data-reveal-columns="4">
-    {
-      members.map((member, index) => (
-        <li
-          class="member"
-          data-reveal
-          id={`absen-${String(member.number).padStart(2, "0")}`}
-          style={`--column: ${index % 4}`}
+    {members.map((member, index) => (
+      <li
+        class="member"
+        data-reveal
+        id={`absen-${String(member.number).padStart(2, "0")}`}
+        style={`--column: ${index % 4}`}
+      >
+        <div
+          class:list={[
+            "member-card",
+            { "is-pending": !member.photo, "is-builder": member.builder },
+          ]}
         >
-          <div class:list={["member-card", { "is-pending": !member.photo }]}>
-            {member.photo ? (
-              <Image
-                src={member.photo.portrait}
-                alt={`Foto ${member.name}`}
-                width={600}
-                class="member-image parallax-photo"
-                loading="lazy"
-              />
-            ) : (
-              <span class="member-pending">Foto menyusul</span>
-            )}
+          {member.photo ? (
+            <Image
+              src={member.photo.portrait}
+              alt={`Foto ${member.name}`}
+              width={600}
+              class="member-image parallax-photo"
+              loading="lazy"
+            />
+          ) : (
+            <span class="member-pending">Foto menyusul</span>
+          )}
 
-            <span class="member-number" aria-hidden="true">
-              {String(member.number).padStart(2, "0")}
-              <span class="member-present">Hadir</span>
+          <span class="member-number" aria-hidden="true">
+            {String(member.number).padStart(2, "0")}
+            <span class="member-present">Hadir</span>
+          </span>
+
+          {member.role && (
+            <span class="member-badge">
+              <Image src={logoInovus} alt="" height={20} />
             </span>
+          )}
 
-            {member.role && (
-              <span class="member-badge">
-                <Image src={logoInovus} alt="" height={20} />
-              </span>
-            )}
+          {member.builder && (
+            <span class="member-badge member-badge-builder" aria-hidden="true">
+              &lt;/&gt;
+            </span>
+          )}
 
-            <div class="member-info">
-              {member.role && <p class="member-role">{member.role}</p>}
-              <h3>{member.nickname}</h3>
-            </div>
+          <div class="member-info">
+            {member.role && <p class="member-role">{member.role}</p>}
+            {member.builder && <p class="member-role">The Creator</p>}
+            <h3>{member.nickname}</h3>
           </div>
+        </div>
 
-          <div class="member-details">
-            <p class="member-name">{member.name}</p>
-            {member.birthDate && (
-              <p class="member-meta">{formatBirthDate(member.birthDate)}</p>
-            )}
-            {member.instagram && (
-              <a
-                class="member-instagram"
-                href={`https://www.instagram.com/${member.instagram}/`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Instagram @${member.instagram}`}
-              >
-                @{member.instagram} <span aria-hidden="true">↗</span>
-              </a>
-            )}
-          </div>
-        </li>
-      ))
-    }
+        <div class="member-details">
+          <p class="member-name">{member.name}</p>
+          {member.birthDate && (
+            <p class="member-meta">{formatBirthDate(member.birthDate)}</p>
+          )}
+          {member.instagram && (
+            <a
+              class="member-instagram"
+              href={`https://www.instagram.com/${member.instagram}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Instagram @${member.instagram}`}
+            >
+              @{member.instagram} <span aria-hidden="true">↗</span>
+            </a>
+          )}
+        </div>
+      </li>
+    ))}
   </ul>
 </section>
 
@@ -83,7 +95,10 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
       const card = member.querySelector<HTMLElement>(".member-card");
       if (!card) continue;
       const rect = card.getBoundingClientRect();
-      member.classList.toggle("is-called", rect.top < line && rect.bottom > line);
+      member.classList.toggle(
+        "is-called",
+        rect.top < line && rect.bottom > line,
+      );
     }
   };
 
@@ -152,7 +167,8 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
     overflow: clip;
     border-radius: var(--radius-pillar);
     background-color: var(--primary);
-    transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transform: perspective(900px) rotateX(var(--tilt-x, 0deg))
+      rotateY(var(--tilt-y, 0deg));
     transition:
       background-color 400ms ease,
       border-radius 500ms cubic-bezier(0.3, 1.4, 0.5, 1),
@@ -209,6 +225,32 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
   .member-card:hover,
   .member.is-called .member-card {
     background-color: var(--surface);
+  }
+
+  .member-card.is-builder {
+    background-color: var(--accent);
+  }
+
+  .member-card.is-builder:hover,
+  .member.is-called .member-card.is-builder {
+    background-color: var(--surface);
+  }
+
+  .member-card.is-builder .member-role {
+    color: var(--surface);
+  }
+
+  .member-card.is-builder:hover .member-role,
+  .member.is-called .member-card.is-builder .member-role {
+    color: var(--accent);
+  }
+
+  .member-badge-builder {
+    color: var(--accent);
+    font-family: var(--font-display-solid);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -1px;
   }
 
   .member-card.is-pending:hover,

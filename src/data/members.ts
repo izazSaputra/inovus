@@ -28,6 +28,7 @@ export interface Member {
   birthDate?: string;
   instagram?: string;
   role?: string;
+  builder?: boolean;
   photo?: MemberPhoto;
 }
 
@@ -51,7 +52,7 @@ export const members: Member[] = [
   { number: 17, nickname: "Ibi", name: "Habibi Raihan Nugraha", birthDate: "2007-05-30", instagram: "ibirhn", photo: photo("habibi") },
   { number: 18, nickname: "Hafidz", name: "Hafidz Achmad Prasetya", birthDate: "2006-09-13", instagram: "fdzxprsty_", photo: photo("hapid") },
   { number: 19, nickname: "Indria", name: "Indria Rahma Aulia", birthDate: "2007-01-29", instagram: "indria__a", photo: photo("indria") },
-  { number: 20, nickname: "Izaz", name: "Izaz Saputra", birthDate: "2006-11-13", instagram: "izazsaja_", photo: photo("izaz") },
+  { number: 20, nickname: "Izaz", name: "Izaz Saputra", birthDate: "2006-11-13", instagram: "izazsaja_", builder: true, photo: photo("izaz") },
   { number: 21, nickname: "Kemal", name: "Kemal Yusuf Sugiar", birthDate: "2007-04-16", instagram: "kvmalysf", photo: photo("kemal") },
   { number: 22, nickname: "Keysa", name: "Keysa Lena Misdona", birthDate: "2007-01-25", instagram: "keysalenaa", photo: photo("keysa") },
   { number: 23, nickname: "Malva", name: "Malva Lidya Az Zahra", birthDate: "2006-08-27", instagram: "malvalydy_a", photo: photo("malva") },
