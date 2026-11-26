@@ -1,3 +1,7 @@
+---
+import { members } from "../../data/members";
+---
+
 <section class="member-hero" aria-labelledby="member-hero-title" data-reveal-stagger>
   <p class="member-hero-label" data-reveal>
     PTI-B <span aria-hidden="true">/</span> ANGKATAN 2025
@@ -9,12 +13,59 @@
       <span>Inovus.</span>
     </h1>
 
-    <p class="member-hero-description" data-reveal>
-      Satu kelas, banyak kepala. Kenalan sama pengurus dan teman-teman PTI-B
-      angkatan 2025, satu per satu.
-    </p>
+    <div class="member-hero-side" data-reveal>
+      <p class="member-hero-count">
+        <span class="member-hero-number" data-count={members.length}>
+          {members.length}
+        </span>
+        <span class="member-hero-unit">orang di daftar absen</span>
+      </p>
+      <p class="member-hero-description">
+        Satu kelas, banyak kepala. Kenalan sama pengurus dan teman-teman PTI-B
+        angkatan 2025, satu per satu.
+      </p>
+    </div>
   </div>
 </section>
+
+<script>
+  const side = document.querySelector<HTMLElement>(".member-hero-side");
+  const counter = document.querySelector<HTMLElement>(".member-hero-number");
+
+  if (side && counter) {
+    const total = Number(counter.dataset.count) || 0;
+    const format = (value: number) => String(value).padStart(2, "0");
+    let started = false;
+
+    counter.textContent = format(1);
+
+    const count = () => {
+      if (started) return;
+      started = true;
+      const duration = 1600;
+      const begin = performance.now() + 350;
+
+      const tick = (now: number) => {
+        const progress = Math.min(Math.max((now - begin) / duration, 0), 1);
+        const eased = 1 - (1 - progress) ** 3;
+        counter.textContent = format(Math.max(1, Math.round(eased * total)));
+        if (progress < 1) requestAnimationFrame(tick);
+      };
+
+      requestAnimationFrame(tick);
+    };
+
+    if (side.classList.contains("is-revealed")) count();
+    else {
+      const observer = new MutationObserver(() => {
+        if (!side.classList.contains("is-revealed")) return;
+        observer.disconnect();
+        count();
+      });
+      observer.observe(side, { attributes: true, attributeFilter: ["class"] });
+    }
+  }
+</script>
 
 <style>
   .member-hero {
@@ -56,6 +107,33 @@
     font-size: 1.15em;
     font-weight: 700;
     letter-spacing: -2px;
+  }
+
+  .member-hero-count {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .member-hero-number {
+    color: var(--primary);
+    font-family: var(--font-display);
+    font-size: 128px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 0.8;
+  }
+
+  .member-hero-unit {
+    max-width: 96px;
+    padding-bottom: 4px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    line-height: 1.4;
+    text-transform: uppercase;
   }
 
   .member-hero-description {
