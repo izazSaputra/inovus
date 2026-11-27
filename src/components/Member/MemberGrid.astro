@@ -1,8 +1,68 @@
 ---
 import { Image } from "astro:assets";
 
-import { members, formatBirthDate } from "../../data/members";
+import { members, formatBirthDate, type Member } from "../../data/members";
 import logoInovus from "../../assets/logo/logo_inovus.svg";
+
+interface Pause {
+  kind: "logo" | "value" | "instagram";
+  caption: string;
+  label?: string;
+  text?: string;
+  accent?: boolean;
+}
+
+const pauses = new Map<number, Pause>([
+  [5, { kind: "logo", caption: "Logo Inovus" }],
+  [
+    13,
+    {
+      kind: "value",
+      caption: "Nilai kami",
+      label: "01",
+      text: "Ketawa bareng.",
+    },
+  ],
+  [
+    22,
+    {
+      kind: "value",
+      caption: "Nilai kami",
+      label: "02",
+      text: "Saling bantu.",
+    },
+  ],
+  [
+    30,
+    {
+      kind: "value",
+      caption: "Nilai kami",
+      label: "03",
+      text: "Peduli.",
+      accent: true,
+    },
+  ],
+  [
+    39,
+    {
+      kind: "instagram",
+      caption: "Instagram kelas",
+      label: "@inovus.ofc",
+      text: "Ikuti cerita kita",
+    },
+  ],
+]);
+
+type Slot =
+  { member: Member; pause?: never } | { pause: Pause; member?: never };
+
+const slots: Slot[] = [];
+let nextMember = 0;
+for (let slot = 0; nextMember < members.length || pauses.has(slot); slot++) {
+  const pause = pauses.get(slot);
+  if (pause) slots.push({ pause });
+  else slots.push({ member: members[nextMember++] });
+}
 ---
 
 <section class="members" aria-labelledby="members-title" data-reveal-stagger>
@@ -15,74 +75,150 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
   </h2>
 
   <ul class="members-grid" data-reveal-stagger="90" data-reveal-columns="4">
-    {members.map((member, index) => (
-      <li
-        class="member"
-        data-reveal
-        id={`absen-${String(member.number).padStart(2, "0")}`}
-        style={`--column: ${index % 4}`}
-      >
-        <div
-          class:list={[
-            "member-card",
-            { "is-pending": !member.photo, "is-builder": member.builder },
-          ]}
+    {slots.map(({ member, pause }, index) =>
+      pause ? (
+        <li
+          class="member member-pause"
+          data-reveal
+          style={`--column: ${index % 4}`}
         >
-          {member.photo ? (
-            <Image
-              src={member.photo.portrait}
-              alt={`Foto ${member.name}`}
-              width={600}
-              class="member-image parallax-photo"
-              loading="lazy"
-            />
-          ) : (
-            <span class="member-pending">Foto menyusul</span>
+          {pause.kind === "logo" && (
+            <div class="pause-card pause-logo">
+              <svg
+                class="pause-logo-mark"
+                viewBox="0 0 170 201"
+                role="img"
+                aria-label="Logo Inovus"
+              >
+                <path
+                  class="pause-pillar"
+                  style="--weight: 0.7"
+                  d="M46.5608 0H4.95224C2.22123 0 0 2.59692 0 5.81273V66.9374V133.875V146.156C0 176.348 20.8407 200.812 46.5608 200.812H49.7531C50.7241 200.812 51.5131 199.89 51.5131 198.749V133.875V66.9374V5.81273C51.5131 2.59692 49.2918 0 46.5608 0Z"
+                ></path>
+                <path
+                  class="pause-pillar"
+                  style="--weight: 1"
+                  d="M105.332 46.4533H63.7235C60.9925 46.4533 58.7712 48.2493 58.7712 50.4579V92.6275V138.814V147.284C58.7712 168.108 79.6119 184.988 105.332 184.988H108.524C109.495 184.988 110.284 184.357 110.284 183.568V138.814V92.6275V50.4579C110.284 48.2493 108.063 46.4533 105.332 46.4533Z"
+                ></path>
+                <path
+                  class="pause-pillar"
+                  style="--weight: 0.85"
+                  d="M164.116 0H122.507C119.776 0 117.555 2.18433 117.555 4.87833V56.21V112.432V122.747C117.555 148.097 138.396 168.654 164.116 168.654H167.308C168.279 168.654 169.068 167.878 169.068 166.919V112.432V56.21V4.87833C169.068 2.18433 166.847 0 164.116 0Z"
+                ></path>
+                <path
+                  class="pause-dot"
+                  d="M60.7866 29.0758V5.60641C60.7866 2.51196 63.2991 0.0121155 66.3821 0.0121155H102.614C105.745 0.0121155 108.294 2.56049 108.294 5.69136V29.0879C108.294 35.4103 103.16 40.5435 96.836 40.5435H72.2325C65.9087 40.5435 60.7744 35.4103 60.7744 29.0879L60.7866 29.0758Z"
+                ></path>
+              </svg>
+            </div>
           )}
 
-          <span class="member-number" aria-hidden="true">
-            {String(member.number).padStart(2, "0")}
-            <span class="member-present">Hadir</span>
-          </span>
-
-          {member.role && (
-            <span class="member-badge">
-              <Image src={logoInovus} alt="" height={20} />
-            </span>
+          {pause.kind === "value" && (
+            <div
+              class:list={[
+                "pause-card",
+                "pause-value",
+                { "pause-accent": pause.accent },
+              ]}
+            >
+              <span class="pause-label">Nilai {pause.label}</span>
+              <p class="pause-word pause-scramble" data-text={pause.text}>
+                {pause.text}
+              </p>
+            </div>
           )}
 
-          {member.builder && (
-            <span class="member-badge member-badge-builder" aria-hidden="true">
-              &lt;/&gt;
-            </span>
-          )}
-
-          <div class="member-info">
-            {member.role && <p class="member-role">{member.role}</p>}
-            {member.builder && <p class="member-role">The Creator</p>}
-            <h3>{member.nickname}</h3>
-          </div>
-        </div>
-
-        <div class="member-details">
-          <p class="member-name">{member.name}</p>
-          {member.birthDate && (
-            <p class="member-meta">{formatBirthDate(member.birthDate)}</p>
-          )}
-          {member.instagram && (
+          {pause.kind === "instagram" && (
             <a
-              class="member-instagram"
-              href={`https://www.instagram.com/${member.instagram}/`}
+              class="pause-card pause-instagram"
+              href="https://www.instagram.com/inovus.ofc/"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`Instagram @${member.instagram}`}
             >
-              @{member.instagram} <span aria-hidden="true">↗</span>
+              <span class="pause-label">{pause.label}</span>
+              <span class="pause-arrow" aria-hidden="true">
+                ↗
+              </span>
+              <p class="pause-word">{pause.text}</p>
             </a>
           )}
-        </div>
-      </li>
-    ))}
+
+          <div class="member-details">
+            <p class="member-meta">{pause.caption}</p>
+          </div>
+        </li>
+      ) : (
+        <li
+          class="member"
+          data-reveal
+          id={`absen-${String(member.number).padStart(2, "0")}`}
+          style={`--column: ${index % 4}`}
+        >
+          <div
+            class:list={[
+              "member-card",
+              { "is-pending": !member.photo, "is-builder": member.builder },
+            ]}
+          >
+            {member.photo ? (
+              <Image
+                src={member.photo.portrait}
+                alt={`Foto ${member.name}`}
+                width={600}
+                class="member-image parallax-photo"
+                loading="lazy"
+              />
+            ) : (
+              <span class="member-pending">Foto menyusul</span>
+            )}
+
+            <span class="member-number" aria-hidden="true">
+              {String(member.number).padStart(2, "0")}
+              <span class="member-present">Hadir</span>
+            </span>
+
+            {member.role && (
+              <span class="member-badge">
+                <Image src={logoInovus} alt="" height={20} />
+              </span>
+            )}
+
+            {member.builder && (
+              <span
+                class="member-badge member-badge-builder"
+                aria-hidden="true"
+              >
+                &lt;/&gt;
+              </span>
+            )}
+
+            <div class="member-info">
+              {member.role && <p class="member-role">{member.role}</p>}
+              {member.builder && <p class="member-role">Yang Bikin</p>}
+              <h3>{member.nickname}</h3>
+            </div>
+          </div>
+
+          <div class="member-details">
+            <p class="member-name">{member.name}</p>
+            {member.birthDate && (
+              <p class="member-meta">{formatBirthDate(member.birthDate)}</p>
+            )}
+            {member.instagram && (
+              <a
+                class="member-instagram"
+                href={`https://www.instagram.com/${member.instagram}/`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Instagram @${member.instagram}`}
+              >
+                @{member.instagram} <span aria-hidden="true">↗</span>
+              </a>
+            )}
+          </div>
+        </li>
+      ),
+    )}
   </ul>
 </section>
 
@@ -92,7 +228,9 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
   const call = () => {
     const line = window.innerHeight * 0.5;
     for (const member of members) {
-      const card = member.querySelector<HTMLElement>(".member-card");
+      const card = member.querySelector<HTMLElement>(
+        ".member-card, .pause-card",
+      );
       if (!card) continue;
       const rect = card.getBoundingClientRect();
       member.classList.toggle(
@@ -106,7 +244,9 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
   window.addEventListener("resize", call);
   call();
 
-  for (const card of document.querySelectorAll<HTMLElement>(".member-card")) {
+  for (const card of document.querySelectorAll<HTMLElement>(
+    ".member-card, .pause-card",
+  )) {
     card.addEventListener("pointermove", (event) => {
       if (event.pointerType !== "mouse") return;
       const rect = card.getBoundingClientRect();
@@ -116,11 +256,42 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
       card.style.setProperty("--tilt-y", `${(x * 10).toFixed(2)}deg`);
       card.style.setProperty("--shine-x", `${((x + 0.5) * 100).toFixed(1)}%`);
       card.style.setProperty("--shine-y", `${((y + 0.5) * 100).toFixed(1)}%`);
+      card.style.setProperty("--px", x.toFixed(3));
     });
 
     card.addEventListener("pointerleave", () => {
       card.style.setProperty("--tilt-x", "0deg");
       card.style.setProperty("--tilt-y", "0deg");
+      card.style.setProperty("--px", "0");
+    });
+  }
+
+  const glyphs = "abcdefghijklmnopqrstuvwxyz";
+
+  for (const word of document.querySelectorAll<HTMLElement>(
+    ".pause-scramble",
+  )) {
+    const text = word.dataset.text ?? word.textContent ?? "";
+    let frame = 0;
+
+    word.closest(".pause-card")?.addEventListener("mouseenter", () => {
+      cancelAnimationFrame(frame);
+      const start = performance.now();
+
+      const tick = (now: number) => {
+        const progress = Math.min((now - start) / 600, 1);
+        const settled = Math.floor(progress * text.length);
+        word.textContent = [...text]
+          .map((letter, index) =>
+            index < settled || !/[a-z]/i.test(letter)
+              ? letter
+              : glyphs[Math.floor(Math.random() * glyphs.length)],
+          )
+          .join("");
+        if (progress < 1) frame = requestAnimationFrame(tick);
+      };
+
+      frame = requestAnimationFrame(tick);
     });
   }
 </script>
@@ -173,6 +344,139 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
       background-color 400ms ease,
       border-radius 500ms cubic-bezier(0.3, 1.4, 0.5, 1),
       transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .pause-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    aspect-ratio: 4 / 5;
+    padding: 20px;
+    overflow: clip;
+    border-radius: var(--radius-pillar);
+    transform: perspective(900px) rotateX(var(--tilt-x, 0deg))
+      rotateY(var(--tilt-y, 0deg));
+    transition:
+      background-color 500ms ease,
+      border-color 500ms ease,
+      color 500ms ease,
+      transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .member-pause.is-called .pause-card {
+    transition-delay: calc(var(--column, 0) * 110ms);
+  }
+
+  .pause-label {
+    opacity: 0.7;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .pause-word {
+    font-family: var(--font-display);
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -1px;
+  }
+
+  .pause-logo {
+    justify-content: center;
+    align-items: center;
+    background-color: var(--primary);
+  }
+
+  .member-pause.is-called .pause-logo {
+    background-color: var(--accent);
+  }
+
+  .pause-logo-mark {
+    width: 44%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .pause-pillar,
+  .pause-dot {
+    transform-box: fill-box;
+    transform-origin: center bottom;
+    transition:
+      fill 500ms ease,
+      transform 700ms cubic-bezier(0.3, 1.5, 0.5, 1);
+  }
+
+  .pause-pillar {
+    fill: var(--surface);
+    transform: rotate(calc(var(--px, 0) * 22deg * var(--weight)));
+  }
+
+  .pause-dot {
+    fill: var(--accent);
+    transform: translateX(calc(var(--px, 0) * 90%));
+  }
+
+  .member-pause.is-called .pause-dot {
+    fill: var(--primary);
+  }
+
+  .pause-value {
+    border: 1px solid var(--border);
+    background-color: var(--surface);
+    color: var(--primary);
+  }
+
+  .pause-accent {
+    border-color: var(--accent);
+    background-color: var(--accent);
+    color: var(--text);
+  }
+
+  .member-pause.is-called .pause-value {
+    border-color: var(--primary);
+    background-color: var(--primary);
+    color: var(--surface);
+  }
+
+  .pause-instagram {
+    background-color: var(--text);
+    color: var(--surface);
+  }
+
+  .pause-instagram:hover {
+    color: var(--surface);
+  }
+
+  .member-pause.is-called .pause-instagram {
+    background-color: var(--accent);
+    color: var(--text);
+  }
+
+  .pause-instagram:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  .pause-arrow {
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    color: var(--accent);
+    font-size: 40px;
+    transition:
+      color 500ms ease,
+      transform 500ms cubic-bezier(0.3, 1.6, 0.5, 1);
+  }
+
+  .member-pause.is-called .pause-arrow {
+    color: var(--text);
+  }
+
+  .pause-instagram:hover .pause-arrow {
+    transform: translate(6px, -6px);
   }
 
   .member-card::before {
@@ -237,6 +541,7 @@ import logoInovus from "../../assets/logo/logo_inovus.svg";
   }
 
   .member-card.is-builder .member-role {
+    font-weight: 800;
     color: var(--surface);
   }
 
