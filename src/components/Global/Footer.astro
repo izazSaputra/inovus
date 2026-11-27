@@ -1,4 +1,8 @@
 ---
+import { members } from "../../data/members";
+
+const builder = members.find((member) => member.builder);
+
 const pageLinks = [
   { name: "Home", url: "/" },
   { name: "Our Story", url: "/about" },
@@ -59,7 +63,17 @@ const pageLinks = [
         Kembali ke atas <span aria-hidden="true">↑</span>
       </a>
       <p class="footer-copyright">
-        © 2026 Inovus · Dibuat oleh <a href="/member#absen-20">Izaz</a>
+        © 2026 Inovus
+        {
+          builder && (
+            <>
+              · Dibuat oleh{" "}
+              <a href={`/member#absen-${String(builder.number).padStart(2, "0")}`}>
+                {builder.nickname}
+              </a>
+            </>
+          )
+        }
       </p>
     </div>
   </div>
