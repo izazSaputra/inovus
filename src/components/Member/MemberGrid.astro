@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 
 import { members, formatBirthDate, type Member } from "../../data/members";
 import logoInovus from "../../assets/logo/logo_inovus.svg";
+import MemberTarot from "./MemberTarot.astro";
 
 interface Pause {
   kind: "logo" | "value" | "instagram";
@@ -192,6 +193,14 @@ for (let slot = 0; nextMember < members.length || pauses.has(slot); slot++) {
               </span>
             )}
 
+            <button
+              class="member-open"
+              type="button"
+              data-tarot={member.number}
+              aria-haspopup="dialog"
+              aria-label={`Buka kartu ${member.nickname}`}
+            ></button>
+
             <div class="member-info">
               {member.role && <p class="member-role">{member.role}</p>}
               {member.builder && <p class="member-role">Yang Bikin</p>}
@@ -220,6 +229,8 @@ for (let slot = 0; nextMember < members.length || pauses.has(slot); slot++) {
       ),
     )}
   </ul>
+
+  <MemberTarot />
 </section>
 
 <script>
@@ -477,6 +488,21 @@ for (let slot = 0; nextMember < members.length || pauses.has(slot); slot++) {
 
   .pause-instagram:hover .pause-arrow {
     transform: translate(6px, -6px);
+  }
+
+  .member-open {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border: none;
+    border-radius: inherit;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .member-open:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: -3px;
   }
 
   .member-card::before {

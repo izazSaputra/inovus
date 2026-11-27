@@ -29,6 +29,7 @@ export interface Member {
   instagram?: string;
   role?: string;
   builder?: boolean;
+  quote?: string;
   photo?: MemberPhoto;
 }
 

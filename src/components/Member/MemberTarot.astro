@@ -1,0 +1,615 @@
+---
+import { members, formatBirthDate } from "../../data/members";
+
+const numerals: [number, string][] = [
+  [10, "X"],
+  [9, "IX"],
+  [5, "V"],
+  [4, "IV"],
+  [1, "I"],
+];
+
+const toNumeral = (value: number) => {
+  let rest = value;
+  let result = "";
+  for (const [amount, symbol] of numerals) {
+    while (rest >= amount) {
+      result += symbol;
+      rest -= amount;
+    }
+  }
+  return result;
+};
+
+const cards = members.map((member) => ({
+  number: member.number,
+  numeral: toNumeral(member.number),
+  nickname: member.nickname,
+  name: member.name,
+  title: member.builder ? "The Creator" : (member.role ?? "Anggota Inovus"),
+  birth: member.birthDate ? formatBirthDate(member.birthDate) : "",
+  instagram: member.instagram ?? "",
+  quote: member.quote ?? "",
+}));
+---
+
+<dialog class="tarot" aria-label="Kartu anggota" data-lenis-prevent>
+  <div class="tarot-scrim"></div>
+
+  <button class="tarot-close" type="button" aria-label="Tutup kartu">×</button>
+
+  <div class="tarot-stage">
+    <div class="tarot-card">
+      <div class="tarot-tilt">
+        <div class="tarot-inner">
+          <div class="tarot-face tarot-front">
+            <div class="tarot-frame">
+              <span class="tarot-corner" style="--x: 0; --y: 0"></span>
+              <span class="tarot-corner" style="--x: 1; --y: 0"></span>
+              <span class="tarot-corner" style="--x: 1; --y: 1"></span>
+
+              <p class="tarot-numeral" data-field="numeral"></p>
+              <div class="tarot-window">
+                <img class="tarot-portrait" alt="" />
+              </div>
+              <div class="tarot-caption">
+                <p class="tarot-title" data-field="title"></p>
+                <p class="tarot-name" data-field="nickname"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="tarot-face tarot-back">
+            <div class="tarot-frame">
+              <p class="tarot-back-top">
+                <span data-field="numeral"></span>
+                <span>Inovus<span class="tarot-dot">.</span></span>
+              </p>
+
+              <blockquote class="tarot-quote">
+                <span class="tarot-quote-mark" aria-hidden="true">“</span>
+                <p data-field="quote"></p>
+              </blockquote>
+
+              <dl class="tarot-details">
+                <div>
+                  <dt>Nama</dt>
+                  <dd data-field="name"></dd>
+                </div>
+                <div data-row="birth">
+                  <dt>Lahir</dt>
+                  <dd data-field="birth"></dd>
+                </div>
+                <div data-row="instagram">
+                  <dt>Instagram</dt>
+                  <dd>
+                    <a class="tarot-instagram" target="_blank" rel="noopener noreferrer"></a>
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tarot-controls">
+      <button class="tarot-step" type="button" data-step="-1" aria-label="Kartu sebelumnya">←</button>
+      <button class="tarot-flip" type="button" autofocus>Balik kartu</button>
+      <button class="tarot-step" type="button" data-step="1" aria-label="Kartu berikutnya">→</button>
+    </div>
+    <p class="tarot-count"><span data-field="position"></span> / {cards.length}</p>
+  </div>
+
+  <script type="application/json" id="tarot-data" set:html={JSON.stringify(cards)} />
+</dialog>
+
+<script>
+  interface TarotCard {
+    number: number;
+    numeral: string;
+    nickname: string;
+    name: string;
+    title: string;
+    birth: string;
+    instagram: string;
+    quote: string;
+  }
+
+  const dialog = document.querySelector<HTMLDialogElement>(".tarot");
+  const source = document.getElementById("tarot-data");
+
+  if (dialog && source) {
+    const cards: TarotCard[] = JSON.parse(source.textContent ?? "[]");
+    const card = dialog.querySelector<HTMLElement>(".tarot-card")!;
+    const tilt = dialog.querySelector<HTMLElement>(".tarot-tilt")!;
+    const inner = dialog.querySelector<HTMLElement>(".tarot-inner")!;
+    const portrait = dialog.querySelector<HTMLImageElement>(".tarot-portrait")!;
+    const instagram = dialog.querySelector<HTMLAnchorElement>(".tarot-instagram")!;
+    const root = document.documentElement;
+    const pad = (value: number) => String(value).padStart(2, "0");
+
+    let current = -1;
+    let busy = false;
+
+    const gridImage = (index: number) =>
+      document.querySelector<HTMLImageElement>(`#absen-${pad(cards[index].number)} .member-card img`);
+
+    const setField = (name: string, value: string) => {
+      dialog.querySelectorAll<HTMLElement>(`[data-field="${name}"]`).forEach((element) => {
+        element.textContent = value;
+      });
+    };
+
+    const fill = (index: number) => {
+      const data = cards[index];
+      current = index;
+      setField("numeral", data.numeral);
+      setField("nickname", data.nickname);
+      setField("title", data.title);
+      setField("name", data.name);
+      setField("birth", data.birth);
+      setField("position", pad(index + 1));
+      setField("quote", data.quote || `Kata-kata dari ${data.nickname} menyusul.`);
+      dialog.querySelector(".tarot-quote")?.classList.toggle("is-empty", !data.quote);
+      dialog.querySelector<HTMLElement>('[data-row="birth"]')!.hidden = !data.birth;
+      dialog.querySelector<HTMLElement>('[data-row="instagram"]')!.hidden = !data.instagram;
+      instagram.href = `https://www.instagram.com/${data.instagram}/`;
+      instagram.textContent = `@${data.instagram} ↗`;
+
+      const image = gridImage(index);
+      portrait.src = image ? image.currentSrc || image.src : "";
+      portrait.alt = `Foto ${data.name}`;
+      portrait.hidden = !image;
+      dialog.setAttribute("aria-label", `Kartu ${data.nickname}, nomor ${data.number}`);
+    };
+
+    const turn = (from: string, to: string, duration: number, easing: string) => {
+      card.getAnimations().forEach((animation) => animation.cancel());
+      return card.animate(
+        [
+          { transform: `perspective(1600px) ${from}`, opacity: from === "none" ? 1 : 0 },
+          { transform: `perspective(1600px) ${to}`, opacity: to === "none" ? 1 : 0 },
+        ],
+        { duration, easing, fill: "forwards" },
+      ).finished;
+    };
+
+    const open = async (index: number) => {
+      if (busy || dialog.open) return;
+      busy = true;
+      fill(index);
+      inner.classList.add("is-instant");
+      inner.classList.remove("is-flipped");
+      void inner.offsetWidth;
+      inner.classList.remove("is-instant");
+
+      root.classList.add("tarot-open");
+      dialog.showModal();
+      requestAnimationFrame(() => dialog.classList.add("is-open"));
+      await turn("rotateY(-100deg) scale(0.9)", "none", 800, "cubic-bezier(0.2, 0.9, 0.25, 1)");
+      busy = false;
+    };
+
+    const close = async () => {
+      if (busy || !dialog.open) return;
+      busy = true;
+      dialog.classList.remove("is-open");
+      await turn("none", "rotateY(100deg) scale(0.9)", 450, "cubic-bezier(0.55, 0, 0.75, 0.2)");
+      dialog.close();
+      card.getAnimations().forEach((animation) => animation.cancel());
+      root.classList.remove("tarot-open");
+      busy = false;
+    };
+
+    const step = async (direction: number) => {
+      if (busy || !dialog.open) return;
+      busy = true;
+      const next = (current + direction + cards.length) % cards.length;
+
+      await turn("none", `rotateY(${direction * -90}deg)`, 260, "cubic-bezier(0.5, 0, 0.75, 0)");
+      inner.classList.add("is-instant");
+      inner.classList.remove("is-flipped");
+      fill(next);
+      void inner.offsetWidth;
+      inner.classList.remove("is-instant");
+      await turn(`rotateY(${direction * 90}deg)`, "none", 520, "cubic-bezier(0.2, 0.9, 0.25, 1)");
+      busy = false;
+    };
+
+    const flip = () => inner.classList.toggle("is-flipped");
+
+    document.querySelectorAll<HTMLElement>("[data-tarot]").forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        const index = cards.findIndex((data) => data.number === Number(trigger.dataset.tarot));
+        if (index >= 0) open(index);
+      });
+    });
+
+    dialog.querySelector(".tarot-flip")?.addEventListener("click", flip);
+    dialog.querySelector(".tarot-close")?.addEventListener("click", close);
+    dialog.querySelector(".tarot-scrim")?.addEventListener("click", close);
+    dialog.querySelectorAll<HTMLElement>("[data-step]").forEach((button) => {
+      button.addEventListener("click", () => step(Number(button.dataset.step)));
+    });
+
+    tilt.addEventListener("click", (event) => {
+      if ((event.target as HTMLElement).closest("a")) return;
+      flip();
+    });
+
+    dialog.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      close();
+    });
+
+    dialog.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight") step(1);
+      if (event.key === "ArrowLeft") step(-1);
+    });
+
+    dialog.addEventListener("pointermove", (event) => {
+      if (event.pointerType !== "mouse") return;
+      const rect = card.getBoundingClientRect();
+      const x = (event.clientX - (rect.left + rect.width / 2)) / window.innerWidth;
+      const y = (event.clientY - (rect.top + rect.height / 2)) / window.innerHeight;
+      tilt.style.setProperty("--tilt-x", `${(-y * 14).toFixed(2)}deg`);
+      tilt.style.setProperty("--tilt-y", `${(x * 18).toFixed(2)}deg`);
+    });
+
+    const linked = location.hash.match(/^#absen-(\d+)$/);
+    const linkedIndex = linked ? cards.findIndex((data) => data.number === Number(linked[1])) : -1;
+    if (linkedIndex >= 0) {
+      document.addEventListener("inovus:reveal", () => setTimeout(() => open(linkedIndex), 900), {
+        once: true,
+      });
+    }
+
+    dialog.addEventListener("pointerleave", () => {
+      tilt.style.setProperty("--tilt-x", "0deg");
+      tilt.style.setProperty("--tilt-y", "0deg");
+    });
+  }
+</script>
+
+<style>
+  :global(html.tarot-open) {
+    overflow: hidden;
+  }
+
+  .tarot {
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    overflow: hidden;
+    overscroll-behavior: contain;
+    background: transparent;
+    color: var(--text);
+  }
+
+  .tarot::backdrop {
+    background: transparent;
+  }
+
+  .tarot-scrim {
+    position: absolute;
+    inset: 0;
+    background-color: color-mix(in oklch, var(--text) 35%, transparent);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    transition: opacity 500ms ease;
+  }
+
+  .tarot.is-open .tarot-scrim {
+    opacity: 1;
+  }
+
+  .tarot-close {
+    position: absolute;
+    top: 24px;
+    right: 32px;
+    z-index: 2;
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--surface);
+    color: var(--text);
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0;
+    transform: scale(0.6);
+    transition:
+      opacity 300ms ease,
+      transform 500ms cubic-bezier(0.3, 1.6, 0.5, 1),
+      background-color 200ms ease;
+  }
+
+  .tarot-close:hover {
+    background-color: var(--accent);
+  }
+
+  .tarot-stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .tarot-card {
+    height: min(620px, calc(100vh - 170px));
+    aspect-ratio: 7 / 12;
+    perspective: 1600px;
+    pointer-events: auto;
+  }
+
+  .tarot-tilt {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transition: transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    cursor: pointer;
+  }
+
+  .tarot-inner {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transition: transform 900ms cubic-bezier(0.3, 1.25, 0.4, 1);
+  }
+
+  .tarot-inner.is-flipped {
+    transform: rotateY(180deg);
+  }
+
+  .tarot-inner.is-instant {
+    transition: none;
+  }
+
+  .tarot-face {
+    position: absolute;
+    inset: 0;
+    padding: 14px;
+    border-radius: 10px 10px 10px 64px;
+    box-shadow: 0 30px 80px -20px color-mix(in oklch, var(--text) 50%, transparent);
+    backface-visibility: hidden;
+  }
+
+  .tarot-front {
+    background-color: var(--surface);
+  }
+
+  .tarot-back {
+    background-color: var(--primary);
+    color: var(--surface);
+    transform: rotateY(180deg);
+  }
+
+  .tarot-frame {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 14px;
+    height: 100%;
+    padding: 16px;
+    border: 1px solid var(--primary);
+    border-radius: 6px 6px 6px 50px;
+  }
+
+  .tarot-back .tarot-frame {
+    border-color: color-mix(in oklch, var(--surface) 35%, transparent);
+  }
+
+  .tarot-corner {
+    position: absolute;
+    top: calc(var(--y) * 100%);
+    left: calc(var(--x) * 100%);
+    width: 9px;
+    height: 9px;
+    border-radius: 2px;
+    background-color: var(--accent);
+    transform: translate(-50%, -50%);
+  }
+
+  .tarot-numeral {
+    color: var(--primary);
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-align: center;
+  }
+
+  .tarot-window {
+    overflow: hidden;
+    border-radius: 999px 999px 6px 36px;
+    background-color: var(--primary);
+  }
+
+  .tarot-portrait {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+  }
+
+  .tarot-caption {
+    text-align: center;
+  }
+
+  .tarot-title {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .tarot-name {
+    margin-top: 6px;
+    font-family: var(--font-display-solid);
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .tarot-back-top {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .tarot-dot {
+    color: var(--accent);
+  }
+
+  .tarot-quote {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .tarot-quote-mark {
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 0.6;
+  }
+
+  .tarot-quote p {
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: -0.5px;
+  }
+
+  .tarot-quote.is-empty p {
+    opacity: 0.6;
+    font-size: 18px;
+  }
+
+  .tarot-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 14px;
+    border-top: 1px solid color-mix(in oklch, var(--surface) 35%, transparent);
+  }
+
+  .tarot-details div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 13px;
+  }
+
+  .tarot-details div[hidden] {
+    display: none;
+  }
+
+  .tarot-details dt {
+    opacity: 0.6;
+  }
+
+  .tarot-details dd {
+    font-weight: 500;
+    text-align: right;
+  }
+
+  .tarot-instagram {
+    color: var(--surface);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 3px;
+  }
+
+  .tarot-instagram:hover {
+    color: var(--accent);
+  }
+
+  .tarot-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    pointer-events: auto;
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 400ms ease 200ms,
+      transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1) 200ms;
+  }
+
+  .tarot-controls button {
+    height: 44px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--surface);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background-color 200ms ease,
+      color 200ms ease;
+  }
+
+  .tarot-controls .tarot-flip {
+    background-color: var(--primary);
+    color: var(--surface);
+  }
+
+  .tarot-controls button:hover {
+    background-color: var(--accent);
+    color: var(--text);
+  }
+
+  .tarot-controls button:focus-visible,
+  .tarot-close:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .tarot-count {
+    color: var(--surface);
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    opacity: 0;
+    transition: opacity 400ms ease 300ms;
+  }
+
+  .tarot.is-open .tarot-controls {
+    opacity: 1;
+    transform: none;
+  }
+
+  .tarot.is-open .tarot-close {
+    opacity: 1;
+    transform: none;
+  }
+
+  .tarot.is-open .tarot-count {
+    opacity: 0.8;
+  }
+</style>
